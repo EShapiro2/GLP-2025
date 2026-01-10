@@ -31,11 +31,13 @@ Warning--empty publisher in kleinman1990distributed
 Warning--empty address in kleinman1990distributed
 Warning--empty publisher in kowalski1974predicate
 Warning--empty address in kowalski1974predicate
+Warning--no number and no volume in levi1985readonly
 Warning--no number and no volume in lewis2025morpheus
 Warning--page numbers missing in lewis2025morpheus
 Warning--no number and no volume in lindley2017lightweight
 Warning--empty address in lloyd1987foundations
 Warning--empty address in menezes1996handbook
+Warning--no number and no volume in mierowsky1985fcp
 Warning--empty address in mukhopadhyay2018ethereum
 Warning--page numbers missing in nakamoto2008peer
 Warning--empty address in reppy1999concurrent
@@ -46,9 +48,10 @@ Warning--empty address in scalas2016lightweight
 Warning--empty publisher in scilla2018
 Warning--empty address in scilla2018
 Warning--empty address in shapiro1982algorithmic
+Warning--no number and no volume in shapiro1983subset
+Warning--page numbers missing in shapiro1983subset
 Warning--empty publisher in shapiro1984systems
 Warning--empty address in shapiro1984systems
-Warning--empty address in shapiro1987concurrent
 Warning--no number and no volume in shapiro2021multiagent
 Warning--page numbers missing in shapiro2021multiagent
 Warning--empty address in shapiro2023gsn
@@ -62,45 +65,47 @@ Warning--empty publisher in silverman1988logix
 Warning--empty address in silverman1988logix
 Warning--empty address in sterling1994art
 Warning--empty address in ueda1986guarded
-You've used 74 entries,
+Warning--no number and no volume in ueda2001resource
+Warning--empty address in ueda1995io
+You've used 79 entries,
             2969 wiz_defined-function locations,
-            1085 strings with 17305 characters,
-and the built_in function-call counts, 51676 in all, are:
-= -- 4337
-> -- 3750
+            1110 strings with 18028 characters,
+and the built_in function-call counts, 55405 in all, are:
+= -- 4672
+> -- 4001
 < -- 4
-+ -- 1124
-- -- 1296
-* -- 4587
-:= -- 9420
-add.period$ -- 329
-call.type$ -- 74
-change.case$ -- 527
-chr.to.int$ -- 72
-cite$ -- 133
-duplicate$ -- 1523
-empty$ -- 3076
-format.name$ -- 1472
-if$ -- 9622
++ -- 1202
+- -- 1386
+* -- 4917
+:= -- 10077
+add.period$ -- 350
+call.type$ -- 79
+change.case$ -- 564
+chr.to.int$ -- 77
+cite$ -- 143
+duplicate$ -- 1623
+empty$ -- 3303
+format.name$ -- 1574
+if$ -- 10321
 int.to.chr$ -- 3
 int.to.str$ -- 0
-missing$ -- 88
-newline$ -- 383
-num.names$ -- 736
-pop$ -- 502
+missing$ -- 93
+newline$ -- 408
+num.names$ -- 786
+pop$ -- 525
 preamble$ -- 1
-purify$ -- 979
+purify$ -- 1045
 quote$ -- 0
-skip$ -- 1565
+skip$ -- 1672
 stack$ -- 0
-substring$ -- 2408
-swap$ -- 505
+substring$ -- 2641
+swap$ -- 539
 text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 1352
-warning$ -- 59
-while$ -- 726
+type$ -- 1462
+warning$ -- 64
+while$ -- 783
 width$ -- 0
-write$ -- 1019
-(There were 59 warnings)
+write$ -- 1086
+(There were 64 warnings)
