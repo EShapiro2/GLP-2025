@@ -1,8 +1,9 @@
-\documentclass[runningheads,thm-restate]{llncs}
+\documentclass{new_tlp}
 
-% Essential packages for LNCS
+% Essential packages
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb,amsfonts}
+\usepackage{aopmath}
 \usepackage{xspace}
 \usepackage{hyperref}
 \usepackage{cleveref}
@@ -13,30 +14,29 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
-% Your specific packages
+% Additional packages
 \usepackage{multirow}
 \usepackage{mathtools}
 \usepackage{relsize}
 \usepackage{bm}
 \usepackage{verbatimbox}
 \usepackage{wrapfig}
-\usepackage{thmtools}
 
-% Your custom formatting commands
+% Custom formatting commands
 \newcommand{\mypara}[1]{\smallskip\noindent\textbf{#1.}}
-\newcommand{\temph}[1]{\textbf{#1}}  % or use \emph{#1}
+\newcommand{\temph}[1]{\textbf{#1}}
 \newcommand{\remove}[1]{}
 \newcommand{\udi}[1]{\textcolor{blue}{[Udi says: #1]}}
 \newcommand{\claude}[1]{\textcolor{red}{[Claude: #1]}}
 
-% Your abbreviation commands
+% Abbreviation commands
 \newcommand{\GLP}{\textsc{GLP}\xspace}
 \newcommand{\lp}{logic programs\xspace}
 \newcommand{\cp}{Concurrent Prolog\xspace}
 \newcommand{\scl}{\textsc{scl}\xspace}
 \newcommand{\gsn}{\textsc{gsn}\xspace}
 
-% Your math commands
+% Math commands
 \newcommand{\calV}{\mathcal{V}}
 \newcommand{\calG}{\mathcal{G}}
 \newcommand{\calT}{\mathcal{T}}
@@ -75,21 +75,16 @@
 \setlist{itemsep=1pt, topsep=3pt, leftmargin=*}
 
 \newtheorem{observation}{Observation}
-\raggedbottom  % Prevents vertical justification
-
-% Bibliography style
-\bibliographystyle{plain}
 
 \begin{document}
 
-\title{\smaller
-GLP: A Secure, Multiagent, Grassroots, Concurrent, Logic Programming Language}
-\titlerunning{GLP}
-\author{Ehud Shapiro}
-\authorrunning{Shapiro}
-\institute{London School of Economics and Weizmann Institute of Science}
+\title{GLP: A Secure, Multiagent, Grassroots, Concurrent, Logic Programming Language}
 
-\maketitle
+\author[E. Shapiro]{Ehud Shapiro}
+\affiliation{London School of Economics and Weizmann Institute of Science}
+\email{ehud.shapiro@weizmann.ac.il}
+
+\keywords{concurrent logic programming, grassroots platforms, secure communication, multiagent systems, cryptographic protocols}
 
 \begin{abstract}
 Grassroots platforms are distributed applications run by cryptographically-identified people on their networked personal devices, where multiple disjoint platform instances emerge independently and coalesce when they interoperate. Their foundation is the grassroots social graph, upon which grassroots social networks, grassroots cryptocurrencies, and grassroots democratic federations can be built.
@@ -97,14 +92,10 @@ Grassroots platforms are distributed applications run by cryptographically-ident
 Grassroots platforms have yet to be implemented, the key challenge being faulty and malicious participants: without secure programming support, correct participants cannot reliably identify each other, establish secure communication, or verify each other's code integrity.
 
 We present GLP, a secure, multiagent, concurrent, logic programming language for implementing grassroots platforms. GLP extends logic programs with paired single-reader/single-writer (SRSW) logic variables, providing secure communication channels among cryptographically-identified people through encrypted, signed and attested messages, which enable identity and code integrity verification.
-We present GLP progressively:  logic programs,  concurrent GLP,  multiagent GLP, augmenting it with cryptographic security, and providing smartphone implementation-ready specifications. We prove safety properties including that GLP computations are deductions, SRSW preservation, acyclicity, and monotonicity. We prove multiagent GLP is grassroots and that GLP streams achieve blockchain security properties. We present a grassroots social graph protocol establishing authenticated peer-to-peer connections and demonstrate secure grassroots social networking applications.
+We present GLP progressively: logic programs, concurrent GLP, multiagent GLP, augmenting it with cryptographic security, and providing smartphone implementation-ready specifications. We prove safety properties including that GLP computations are deductions, SRSW preservation, acyclicity, and monotonicity. We prove multiagent GLP is grassroots and that GLP streams achieve blockchain security properties. We present a grassroots social graph protocol establishing authenticated peer-to-peer connections and demonstrate secure grassroots social networking applications.
 \end{abstract}
 
-\newpage
-% Add table of contents
-\setcounter{tocdepth}{2}  % Control depth: 0=chapters, 1=sections, 2=subsections
-\tableofcontents
-\newpage
+\maketitle
 
 % Main sections
 \input{glp_section_introduction}
@@ -118,6 +109,7 @@ We present GLP progressively:  logic programs,  concurrent GLP,  multiagent GLP,
 \input{glp_section_related_work}
 \input{glp_section_conclusion}
 
+\bibliographystyle{acmtrans}
 \bibliography{bib}
 
 % Appendices
