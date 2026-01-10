@@ -54,9 +54,24 @@ Follows from the correspondence between GLP reductions and LP reductions on pure
 \qed
 \end{proof}
 
-\SRSWInvariant*
+\SOPreservation*
 \begin{proof}
-By induction on run length. The base case holds by assumption. For the inductive step, consider $G_i \rightarrow G_{i+1}$ via reduction with clause $C$ renamed apart. The renamed clause has fresh variables satisfying the SRSW syntactic constraint. The reduction replaces atom $A$ with body $B$ and applies $\sigma?$. Since $\sigma?$ replaces variables with terms (eliminating variable occurrences rather than duplicating them), and $B$ has fresh variables distinct from $G_i$, the SRSW invariant is preserved in $G_{i+1}$.
+By induction on run length. The base case holds by assumption: $G_0$ satisfies SO.
+
+For the inductive step, assume $G_i$ satisfies SO and consider $G_i \rightarrow G_{i+1}$ via reduction of atom $A \in G_i$ with clause $C$ satisfying the SRSW syntactic restriction. Let $(H \verb|:-| B)$ be the renaming of $C$ apart from $G_i$, with writer mgu $\sigma$.
+
+Since the clause satisfies SRSW, it satisfies SO: every variable in $C$ occurs exactly once. After renaming apart, $(H \verb|:-| B)$ also satisfies SO with fresh variables.
+
+Since $G_i$ satisfies SO and $A \in G_i$, every variable in $A$ occurs exactly once in $G_i$. The writer mgu $\sigma$ maps variables in $A$ to subterms of $H$ (and vice versa). By SO of both $A$ and $H$, each such variable occurs exactly once on each side.
+
+The new goal $G_{i+1} = (G_i \setminus \{A\} \cup B)\sigma$ is formed by:
+\begin{enumerate}
+    \item Removing $A$ from $G_i$ (eliminating all variable occurrences in $A$)
+    \item Adding $B$ (introducing fresh variables, each occurring once by SO of $B$)
+    \item Applying $\sigma$ (substituting variables with terms, not duplicating occurrences)
+\end{enumerate}
+
+Since removal and substitution do not duplicate variable occurrences, and $B$'s fresh variables each occur once, $G_{i+1}$ satisfies SO.
 \qed\end{proof}
 
 \Acyclicity* 
