@@ -1,0 +1,106 @@
+This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main GLP 2025.aux
+The style file: acmtrans.bst
+Database file #1: bib.bib
+Warning--no number and no volume in almeida2024blocklace
+Warning--page numbers missing in almeida2024blocklace
+Warning--empty address in armstrong2013programming
+Warning--empty address in boer2024active
+Warning--empty address in boyd2003protocols
+Warning--empty publisher in clebsch2015deny
+Warning--empty address in clebsch2015deny
+Warning--empty publisher in cooper2007links
+Warning--empty address in cooper2007links
+Warning--empty publisher in costan2016intel
+Warning--empty address in costan2016intel
+Warning--empty publisher in dauth2019futures
+Warning--empty address in dauth2019futures
+Warning--no number and no volume in fournet1996reflexive
+Warning--empty publisher in gaifman1989fully
+Warning--empty address in gaifman1989fully
+Warning--empty publisher in garay2015bitcoin
+Warning--empty address in garay2015bitcoin
+Warning--empty address in hankerson2004guide
+Warning--empty publisher in hicks2023cedar
+Warning--empty address in hicks2023cedar
+Warning--empty address in honda1993types
+Warning--empty address in jespersen2015session
+Warning--empty address in keidar2023cordial
+Warning--empty publisher in kleinman1990distributed
+Warning--empty address in kleinman1990distributed
+Warning--empty publisher in kowalski1974predicate
+Warning--empty address in kowalski1974predicate
+Warning--no number and no volume in lewis2025morpheus
+Warning--page numbers missing in lewis2025morpheus
+Warning--no number and no volume in lindley2017lightweight
+Warning--empty address in lloyd1987foundations
+Warning--empty address in menezes1996handbook
+Warning--empty address in mukhopadhyay2018ethereum
+Warning--page numbers missing in nakamoto2008peer
+Warning--empty address in reppy1999concurrent
+Warning--empty publisher in sabt2015trusted
+Warning--empty address in sabt2015trusted
+Warning--empty address in safra1988meta
+Warning--empty address in scalas2016lightweight
+Warning--empty publisher in scilla2018
+Warning--empty address in scilla2018
+Warning--empty address in shapiro1982algorithmic
+Warning--empty publisher in shapiro1984systems
+Warning--empty address in shapiro1984systems
+Warning--empty address in shapiro1987concurrent
+Warning--no number and no volume in shapiro2021multiagent
+Warning--page numbers missing in shapiro2021multiagent
+Warning--empty address in shapiro2023gsn
+Warning--no number and no volume in shapiro2024gc
+Warning--page numbers missing in shapiro2024gc
+Warning--no number and no volume in shapiro2025GF
+Warning--page numbers missing in shapiro2025GF
+Warning--empty publisher in shapiro2011conflict
+Warning--empty address in shapiro2011conflict
+Warning--empty publisher in silverman1988logix
+Warning--empty address in silverman1988logix
+Warning--empty address in sterling1994art
+Warning--empty address in ueda1986guarded
+You've used 74 entries,
+            2969 wiz_defined-function locations,
+            1085 strings with 17305 characters,
+and the built_in function-call counts, 51676 in all, are:
+= -- 4337
+> -- 3750
+< -- 4
++ -- 1124
+- -- 1296
+* -- 4587
+:= -- 9420
+add.period$ -- 329
+call.type$ -- 74
+change.case$ -- 527
+chr.to.int$ -- 72
+cite$ -- 133
+duplicate$ -- 1523
+empty$ -- 3076
+format.name$ -- 1472
+if$ -- 9622
+int.to.chr$ -- 3
+int.to.str$ -- 0
+missing$ -- 88
+newline$ -- 383
+num.names$ -- 736
+pop$ -- 502
+preamble$ -- 1
+purify$ -- 979
+quote$ -- 0
+skip$ -- 1565
+stack$ -- 0
+substring$ -- 2408
+swap$ -- 505
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 1352
+warning$ -- 59
+while$ -- 726
+width$ -- 0
+write$ -- 1019
+(There were 59 warnings)
