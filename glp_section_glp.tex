@@ -27,9 +27,9 @@ The remainder of this section presents GLP syntax, nondeterministic operational 
 \subsection{GLP Syntax}
 
 \mypara{Reader/Writer pairs}
-GLP extends Logic Programs with paired reader/writer variables, where a \emph{writer} $X$ is a single-assignment variable (promise) and its \emph{paired reader $X?$} provides read-only access to the (future) value of $X$. We denote by $V$ the set of all writers, $V?$ the set of all readers and, $\mathcal{V} = V \cup V?$ the set of all variables, where for each writer $X \in V$ there exists a paired reader $X? \in V?$.  
-We view $?$ as an identity suffix operator on non-writers, namely  $(X?)?=X?$ for $X?\in V?$ and $T?=T$ for $T\notin \calV$. 
-We use $\calA_?$ and $\calG_?$ to denote the set of all atoms and goals, respectively, over $\calV$ (i.e., goals that may contain both readers and writers), and for a GLP program $M$,  $\calA_?(M)$  and $\calG_?(M)$ to denote the subsets of  $\calA_?$ and $\calG_?$, respectively,  restricted to the vocabulary of $M$.
+GLP extends Logic Programs with paired reader/writer variables, where a \emph{writer} $X$ is a single-assignment variable (promise) and its \emph{paired reader $X?$} provides read-only access to the (future) value of $X$. We denote by $\calV$ the set of all writers (the standard LP variables), $\calV? = \{X? \mid X \in \calV\}$ the set of all readers, and $\hat\calV = \calV \cup \calV?$ the set of all GLP variables, where for each writer $X \in \calV$ there exists a paired reader $X? \in \calV?$.
+We view $?$ as an identity suffix operator on non-writers, namely $(X?)?=X?$ for $X?\in \calV?$ and $T?=T$ for $T\notin \hat\calV$.
+We use $\calA_?$ and $\calG_?$ to denote the set of all atoms and goals, respectively, over $\hat\calV$ (i.e., goals that may contain both readers and writers), and for a GLP program $P$, $\calA_?(P)$ and $\calG_?(P)$ to denote the subsets of $\calA_?$ and $\calG_?$, respectively, restricted to the vocabulary of $P$.
 
 
 \mypara{Single-Occurrence and Single-Reader/Single-Writer}
@@ -55,35 +55,42 @@ It two writers $X$ and $Y$ are unified during execution, the SRSW requirement im
 
 \subsection{GLP Operational semantics}
 
-\begin{definition}[Writer and Reader Substitution, Reader Counterpart, Suspension Set, Writer MGU]\label{definition:GLP-unification}
+\begin{definition}[Writer Assignment, Reader Assignment, Substitutions, Reader Counterpart]\label{definition:GLP-substitution}
+A GLP \temph{writer assignment} is a term of the form $X := T$, where $X\in\calV$, $T\notin\calV$, satisfying SO.
+A GLP \temph{reader assignment} is a term of the form $X? := T$, where $X?\in\calV?$, $T\notin\calV$, satisfying SO.
 
-A substitution $\sigma$ is a \temph{writer substitution} if  $\sigma$: 
+A \temph{writer substitution} $\sigma$ is the substitution implied by a set of writer assignments that jointly satisfy SO. Equivalently, $\sigma$ is a writer substitution if:
 \begin{enumerate}
-    \item only binds writers: $V_\sigma \subset V$
-    \item does not bind writers to writers: if $X\ne X\sigma$ for $X\in V$ then $X\sigma\notin V$
-    \item does not form cycles through readers:  $X?$ does not occur in $X\sigma$ for any $X \in V_\sigma$
+    \item it only binds writers: $\calV_\sigma \subset \calV$
+    \item it does not bind writers to writers: if $X\ne X\sigma$ for $X\in \calV$ then $X\sigma\notin \calV$
+    \item it does not form cycles through readers: $X?$ does not occur in $X\sigma$ for any $X \in \calV_\sigma$
 \end{enumerate}
-A substitution $\sigma$ is a \temph{reader substitution} if $V_\sigma \subset V?$.
-If $\sigma$ is a writer substitution then its \temph{reader counterpart} is the reader substitution  $\sigma?$  defined by $X?\sigma? = X\sigma$ for every $X\in V_\sigma$.
+A \temph{reader substitution} $\sigma$ is defined analogously: $\calV_\sigma \subset \calV?$.
 
-The \temph{suspension set} of a (regular) substitution $\sigma$ is $W_\sigma:= \{X?\in V? : X?\sigma \notin \calV\}$.
+Given a writer substitution $\sigma$, its \temph{reader counterpart} $\sigma?$ is the reader substitution defined by $X?\sigma? = X\sigma$ for every $X \in \calV_\sigma$.
+\end{definition}
+
+\begin{definition}[Writer Unification, Suspension Set]\label{definition:writer-unification}
+The \temph{suspension set} of a substitution $\sigma$ is $W_\sigma := \{X? \in \calV? : X?\sigma \notin \hat\calV\}$.
 
 The \temph{writer unification} of two terms:
 \begin{enumerate}
-    \item \temph{succeeds with $\sigma$} if they have a writer mgu $\sigma$.
+    \item \temph{succeeds with $\sigma$} if they have a writer mgu $\sigma$
     \item else \temph{suspends on $W_\sigma$} if they have a (regular) mgu $\sigma$
     \item else \temph{fails}
 \end{enumerate}
 \end{definition}
+
 \begin{remark}
-If a writer mgu exists it is unique, rather than unique up to renaming,  since it does not include writer-to-writer assignments.
-If writer-to-writer assignments were allowed then, by the single-writer restriction, the assignment would leave their two paired readers \emph{abandoned}, namely without a writer that can provide them with a value.   
+If a writer mgu exists it is unique, rather than unique up to renaming, since it does not include writer-to-writer assignments.
+If writer-to-writer assignments were allowed then, by the single-writer restriction, the assignment would leave their two paired readers \emph{abandoned}, namely without a writer that can provide them with a value.
 The occurs check condition for the reader counterpart ensures that no writer is bound to a term containing its paired reader, preventing the formation of circular terms, as proven in Proposition~\ref{proposition:acyclicity}.
 \end{remark}
 
 Renaming  (Definition~\ref{definition:renaming}) is extended to respect variable pairing:
 \begin{definition}[GLP Renaming]\label{definition:GLP-renaming}
- Two GLP terms $T, T'$ have a variable in common if for some writer $X\in V$, either $X$ or $X?$ occur in $T$ and either $X$ or $X?$ occur in $T'$. A \temph{GLP renaming} is a renaming substitution $\sigma: \mathcal{V} \mapsto \mathcal{V}$ such that for each $X\in V$: $X\sigma \in V$ and $X?\sigma = (X\sigma)?$.
+A \temph{GLP renaming} is a substitution $\rho: \hat\calV \to \hat\calV$ such that for each $X \in \calV$: $X\rho \in \calV$ and $X?\rho = (X\rho)?$.
+Two GLP terms have a variable in common if for some writer $X \in \calV$, either $X$ or $X?$ occurs in both. A GLP renaming $\rho$ renames $T'$ \temph{apart from} $T$ if $T'\rho$ and $T$ have no variable in common.
 \end{definition}
 
 \begin{definition}[GLP Goal/Clause Reduction]\label{definition:GLP-goal-clause-reduction}

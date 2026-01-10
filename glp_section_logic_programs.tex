@@ -76,7 +76,7 @@ A transition system $LP(P) = (C,c_0, T)$ is a \temph{Logic Programs transition s
 $C=\mathcal{G}(P) \times \Sigma$, $c_0=(G_0, \emptyset)$, and $T$
 is the set of all transitions $(G,\sigma) \rightarrow (G',\sigma') \in (\mathcal{G}(P) \times \Sigma)^2$ such that for some atom $A \in G$ and clause $C \in P$ the LP reduction of $A$ with $C$ succeeds with result $(B,\hat\sigma)$, $G' = (G \setminus \{A\} \cup B)\hat\sigma$, and $\sigma' = \sigma \circ \hat\sigma$.
 \end{definition}
-We write $G \xrightarrow{\sigma} G'$ when we want to make the substitution of a reduction explicit.
+We write $(G,\sigma) \xrightarrow{\hat\sigma} (G',\sigma')$ when we want to make the reduction substitution explicit.
 As a tribute to resolution theorem proving~\cite{robinson1965machine}—the intellectual ancestor of logic programming—a configuration of $LP$ is also referred to as a \emph{resolvent}.
 
 Logic Programs have two forms of nondeterminism: the choice of $A\in G$, called \emph{and-nondeterminism}, and then choice of $C\in P$, called \emph{or-nondeterminism}. Thus, as an abstract model of computation, LP are closely-related to \emph{Alternating Turing Machines}, a generalization of Nondeterministic Turing Machines~\cite{shapiro1984alternation}.
