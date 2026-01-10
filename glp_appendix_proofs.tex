@@ -4,35 +4,35 @@
 \begin{proof}
 We prove by induction on the length of the run that each step preserves logical consequence.
 
-\mypara{Base case} For $n=0$, we have $G_0 = G_0$ with empty substitution $\epsilon$. The outcome $(G_0 \verb|:-| G_0)$ is a tautology, hence a logical consequence of any program.
+\mypara{Base case} For $n=0$, we have $G_0 = G_0$ with empty substitution $\epsilon$. The outcome $(G_0 \texttt{:-} G_0)$ is a tautology, hence a logical consequence of any program.
 
 \mypara{Inductive step} Assume the proposition holds for runs of length $k$. Consider a proper run of length $k+1$:
 $$\rho: G_0 \xrightarrow{\sigma_1} \cdots \xrightarrow{\sigma_k} G_k \xrightarrow{\sigma_{k+1}} G_{k+1}$$
 
-By the inductive hypothesis, $(G_0 \verb|:-| G_k)\sigma'$ is a logical consequence of $M$, where $\sigma' = \sigma_1 \circ \cdots \circ \sigma_k$.
+By the inductive hypothesis, $(G_0 \texttt{:-} G_k)\sigma'$ is a logical consequence of $M$, where $\sigma' = \sigma_1 \circ \cdots \circ \sigma_k$.
 
 For the transition $G_k \xrightarrow{\sigma_{k+1}} G_{k+1}$:
 \begin{itemize}
-   \item There exists atom $A \in G_k$ and clause $(H \verb|:-| B) \in M$ renamed apart
+   \item There exists atom $A \in G_k$ and clause $(H \texttt{:-} B) \in M$ renamed apart
    \item $\sigma_{k+1}$ is the mgu of $A$ and $H$
    \item $G_{k+1} = (G_k \setminus \{A\} \cup B)\sigma_{k+1}$
 \end{itemize}
 
-Since $(H \verb|:-| B)$ is a clause in $M$ and $\sigma_{k+1}$ unifies $A$ with $H$, we know that:
+Since $(H \texttt{:-} B)$ is a clause in $M$ and $\sigma_{k+1}$ unifies $A$ with $H$, we know that:
 \begin{itemize}
-   \item The instance $(H \verb|:-| B)\sigma_{k+1}$ is a logical consequence of $M$ (by instantiation of a program clause)
+   \item The instance $(H \texttt{:-} B)\sigma_{k+1}$ is a logical consequence of $M$ (by instantiation of a program clause)
    \item Since $A\sigma_{k+1} = H\sigma_{k+1}$ (by the mgu property), we can replace $A$ with $B$ under substitution $\sigma_{k+1}$
-   \item Therefore, the implication $(G_k \verb|:-| G_{k+1})$ is a logical consequence of $M$ when we consider that $G_{k+1}$ was obtained by replacing $A$ in $G_k$ with $B$ and applying $\sigma_{k+1}$
+   \item Therefore, the implication $(G_k \texttt{:-} G_{k+1})$ is a logical consequence of $M$ when we consider that $G_{k+1}$ was obtained by replacing $A$ in $G_k$ with $B$ and applying $\sigma_{k+1}$
 \end{itemize}
 
-By the transitivity of logical consequence, if $(G_0 \verb|:-| G_k)\sigma'$ is a logical consequence of $M$ and $(G_k \verb|:-| G_{k+1})$ follows from $M$ under the additional substitution $\sigma_{k+1}$, then $(G_0 \verb|:-| G_{k+1})(\sigma' \circ \sigma_{k+1})$ is a logical consequence of $M$.
+By the transitivity of logical consequence, if $(G_0 \texttt{:-} G_k)\sigma'$ is a logical consequence of $M$ and $(G_k \texttt{:-} G_{k+1})$ follows from $M$ under the additional substitution $\sigma_{k+1}$, then $(G_0 \texttt{:-} G_{k+1})(\sigma' \circ \sigma_{k+1})$ is a logical consequence of $M$.
 
-Since $\sigma = \sigma' \circ \sigma_{k+1} = \sigma_1 \circ \cdots \circ \sigma_{k+1}$, we conclude that the outcome $(G_0 \verb|:-| G_{k+1})\sigma$ is a logical consequence of $M$.
+Since $\sigma = \sigma' \circ \sigma_{k+1} = \sigma_1 \circ \cdots \circ \sigma_{k+1}$, we conclude that the outcome $(G_0 \texttt{:-} G_{k+1})\sigma$ is a logical consequence of $M$.
 \qed\end{proof}
 
 \ReaderOnlyInstantiation*
 \begin{proof}
-Consider the transition $G_i \rightarrow G_{i+1}$ via reduction of some atom $A' \in G_i$ with clause $C$. Let $(H \verb|:-| B)$ be the renaming of $C$ apart from $A'$, with writer mgu $\sigma$ and reader counterpart $\sigma?$.
+Consider the transition $G_i \rightarrow G_{i+1}$ via reduction of some atom $A' \in G_i$ with clause $C$. Let $(H \texttt{:-} B)$ be the renaming of $C$ apart from $A'$, with writer mgu $\sigma$ and reader counterpart $\sigma?$.
 
 By Definition~\ref{definition:GLP-ts}, the Reduce transition specifies that $G_{i+1} = (G_i \setminus \{A'\} \cup B)\sigma$, and the configuration's reader substitution is updated with $\sigma?$.
 
@@ -58,9 +58,9 @@ Follows from the correspondence between GLP reductions and LP reductions on pure
 \begin{proof}
 By induction on run length. The base case holds by assumption: $G_0$ satisfies SO.
 
-For the inductive step, assume $G_i$ satisfies SO and consider $G_i \rightarrow G_{i+1}$ via reduction of atom $A \in G_i$ with clause $C$ satisfying the SRSW syntactic restriction. Let $(H \verb|:-| B)$ be the renaming of $C$ apart from $G_i$, with writer mgu $\sigma$.
+For the inductive step, assume $G_i$ satisfies SO and consider $G_i \rightarrow G_{i+1}$ via reduction of atom $A \in G_i$ with clause $C$ satisfying the SRSW syntactic restriction. Let $(H \texttt{:-} B)$ be the renaming of $C$ apart from $G_i$, with writer mgu $\sigma$.
 
-Since the clause satisfies SRSW, it satisfies SO: every variable in $C$ occurs exactly once. After renaming apart, $(H \verb|:-| B)$ also satisfies SO with fresh variables.
+Since the clause satisfies SRSW, it satisfies SO: every variable in $C$ occurs exactly once. After renaming apart, $(H \texttt{:-} B)$ also satisfies SO with fresh variables.
 
 Since $G_i$ satisfies SO and $A \in G_i$, every variable in $A$ occurs exactly once in $G_i$. The writer mgu $\sigma$ maps variables in $A$ to subterms of $H$ (and vice versa). By SO of both $A$ and $H$, each such variable occurs exactly once on each side.
 
@@ -76,7 +76,7 @@ Since removal and substitution do not duplicate variable occurrences, and $B$'s 
 
 \Acyclicity* 
 \begin{proof}
-By induction on run length. For the base case, $G_0$ contains no circular terms by assumption. For the inductive step, assume $G_i$ contains no circular terms and consider the transition $G_i \rightarrow G_{i+1}$ via reduction of atom $A$ with clause $C$. Let $(H \verb|:-| B)$ be the renaming of $C$ apart from $A$, with writer mgu $\sigma$ and reader counterpart $\sigma?$. The reader counterpart exists only if for all $X \in V_\sigma$, $X? \notin X\sigma$ (occurs check). This ensures no writer is bound to a term containing its paired reader. Since $G_{i+1} = (G_i \setminus \{A\} \cup B)\sigma?$, and the occurs check prevents circular assignments, $G_{i+1}$ contains no circular terms.
+By induction on run length. For the base case, $G_0$ contains no circular terms by assumption. For the inductive step, assume $G_i$ contains no circular terms and consider the transition $G_i \rightarrow G_{i+1}$ via reduction of atom $A$ with clause $C$. Let $(H \texttt{:-} B)$ be the renaming of $C$ apart from $A$, with writer mgu $\sigma$ and reader counterpart $\sigma?$. The reader counterpart exists only if for all $X \in V_\sigma$, $X? \notin X\sigma$ (occurs check). This ensures no writer is bound to a term containing its paired reader. Since $G_{i+1} = (G_i \setminus \{A\} \cup B)\sigma?$, and the occurs check prevents circular assignments, $G_{i+1}$ contains no circular terms.
 \qed\end{proof}
 
 \Monotonicity*
