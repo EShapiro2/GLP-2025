@@ -1,39 +1,66 @@
-\section{Workstation Implementation-Ready Transition System for GLP}\label{appendix:irGLP}
+\section{Implementation-Ready GLP (irGLP)}\label{appendix:irGLP}
 
-This section specifies a workstation (single-agent) implementation-ready transition system for GLP with deterministic execution. 
+This appendix specifies irGLP, an implementation-ready transition system for single-agent (workstation) GLP execution. While the GLP transition system (Definition~\ref{def:glp-ts}) is nondeterministic in goal selection and abstracts away suspension and failure, irGLP provides:
+\begin{enumerate}
+\item Deterministic FIFO scheduling of active goals
+\item Explicit tracking of suspended goals with their suspension sets
+\item Explicit tracking of failed goals
+\item Automatic reactivation of suspended goals when blocking readers are instantiated
+\end{enumerate}
 
-\begin{definition}[irGLP Configuration]
-An \emph{irGLP configuration} over program $M$ is a triple $R = (Q, S, F)$ where:
+The key simplification compared to multiagent GLP is that all variables are local, so reader assignments can be applied immediately rather than through asynchronous communication.
+
+\begin{definition}[irGLP Configuration]\label{def:irglp-configuration}
+An \temph{irGLP configuration} over program $P$ is a triple $(Q, S, F)$ where:
 \begin{itemize}
-\item $Q \in \mathcal{A}^*$ is a sequence of active goals
-\item $S \subseteq \mathcal{A} \times 2^{V?}$ contains suspended goals with their suspension sets
-\item $F \subseteq \mathcal{A}$ contains failed goals
+\item $Q \in \calA_?^*$ is a sequence (queue) of \temph{active goals}
+\item $S \subseteq \calA_? \times 2^{\calV?}$ contains \temph{suspended goals}, each paired with its suspension set of blocking readers
+\item $F \subseteq \calA_?$ contains \temph{failed goals}
 \end{itemize}
 \end{definition}
 
-The irGLP reduction extends GLP reduction by activating goals that were suspended on variables instantiated by the reduction, and explicitly failing goals that do not succeed or suspend.
-
-\begin{definition}[irGLP Goal/Queue Reduction]
-Given configuration $(Q, S, F)$ with $Q = A\cdot Q'$ and clause $C \in M$, the \emph{irGLP reduction} of $A$ with $C$:
-\begin{itemize}
-\item \textbf{succeeds with} $(B, \hat\sigma, R)$ if the GLP reduction of $A$ with $C$ succeeds with $(B, \hat\sigma)$ and $R = \{G : (G, W) \in S \wedge X?\in W \wedge X?\hat\sigma? \neq X?\}$
-\item \textbf{suspends with} $W_C$ if GLP reduction of $A$ with $C$ suspends on readers $W_C$
-\item \textbf{fails} otherwise
-\end{itemize}
+\begin{definition}[Reactivation Set]\label{def:reactivation-set}
+Given a suspended goal set $S$ and a readers substitution $\sigma?$, the \temph{reactivation set} is:
+\[
+\textrm{reactivate}(S, \sigma?) = \{G : (G, W) \in S \wedge \exists X? \in W.\; X?\sigma? \neq X?\}
+\]
+These are goals suspended on readers that have been instantiated by $\sigma?$.
 \end{definition}
 
-\begin{definition}[Implementation-Ready GLP Transition System]
-The transition system $\text{irGLP} = (\mathcal{C}, c_0, \mathcal{T})$ over $M$ and initial goal $G_0$ has configurations $\mathcal{C}$ being all irGLP configurations over $M$, with initial configuration $c_0 = (G_0, \emptyset, \emptyset)$, and transitions $\mathcal{T}$ being all transitions $(Q, S, F) \rightarrow (Q', S', F')$ where $Q = A \cdot Q_r$ and:
-    \begin{enumerate}
-    \item \textbf{Reduce:} If GLP reduction of $A$ with first applicable clause $C \in M$ succeeds with $(B, \hat\sigma,R)$:
-        \begin{itemize}
-        \item \textbf{Activate:}  $S' = S \setminus \{(G, W) : G \in R\}$,  $F' = F$
-        \item \textbf{Schedule:} $Q' = (Q_r \cdot B \cdot R)\hat\sigma\hat\sigma?$
-        \end{itemize}
-    \item \textbf{Suspend:} Else if $W = \bigcup_{C \in M} W_{C} \neq \emptyset$ then $Q' = Q_r$, $S' = S \cup \{(A, W)\}$, $F' = F$
-    \item \textbf{Fail:} Else,  $Q' = Q_r$, $S' = S$, $F' = F \cup \{A\}$.
-    \end{enumerate}
+\begin{definition}[irGLP Transition System]\label{def:irglp-ts}
+The transition system $\textrm{irGLP}(P) = (\calC, c_0, \calT)$ over GLP program $P$ and initial goal $G_0$ satisfying SO is defined by:
+\begin{enumerate}
+\item $\calC$ is the set of all irGLP configurations over $P$
+\item $c_0 = (G_0, \emptyset, \emptyset)$
+\item $\calT$ is the set of all transitions $(Q, S, F) \rightarrow (Q', S', F')$ where $Q = A \cdot Q_r$ (head goal $A$, remainder $Q_r$) and exactly one of the following holds:
+
+\begin{enumerate}
+\item \textbf{Reduce:} There exists a first clause $C \in P$ for which the GLP reduction of $A$ with $C$ (Definition~\ref{def:glp-reduction}) succeeds with $(B, \hat\sigma)$. Let $R = \textrm{reactivate}(S, \hat\sigma?)$. Then:
+\[
+Q' = (Q_r \cdot B \cdot R)\hat\sigma\hat\sigma?, \quad S' = S \setminus \{(G, W) : G \in R\}, \quad F' = F
+\]
+
+\item \textbf{Suspend:} No clause succeeds, but the GLP reduction of $A$ with at least one clause $C \in P$ suspends. Let $W = \bigcup_{C \in P} W_C$ where $W_C$ is the suspension set for clause $C$. Then:
+\[
+Q' = Q_r, \quad S' = S \cup \{(A, W)\}, \quad F' = F
+\]
+
+\item \textbf{Fail:} No clause succeeds and no clause suspends (all clauses fail outright). Then:
+\[
+Q' = Q_r, \quad S' = S, \quad F' = F \cup \{A\}
+\]
+\end{enumerate}
+\end{enumerate}
 \end{definition}
 
-A key restriction compared to the GLP operational semantics is the immediate application of reader substitutions during reduction rather than through asynchronous communication. This simplification is appropriate for workstation execution where all variables are local.
+\begin{remark}[Deterministic Scheduling]
+The irGLP transition system is deterministic: given any non-terminal configuration, exactly one transition is enabled. Goal selection follows FIFO order from the active queue $Q$, and clause selection uses the first applicable clause as in GLP. The only source of nondeterminism in GLP—and-nondeterminism in goal selection—is resolved by the queue discipline.
+\end{remark}
 
+\begin{remark}[Immediate Reader Application]
+In irGLP, reader substitutions $\hat\sigma?$ are applied immediately during reduction rather than through separate Communicate transitions as in the GLP transition system. This is sound for single-agent execution where all variables are local. The substitution $\hat\sigma\hat\sigma?$ in the Reduce transition applies both the writer assignments (to clause body variables) and their reader counterparts (to goals containing the corresponding readers).
+\end{remark}
+
+\begin{proposition}[irGLP Implements GLP]\label{prop:irglp-implements-glp}
+For any irGLP run, projecting away the $S$ and $F$ components and interleaving Communicate transitions yields a valid GLP run. Conversely, any GLP run with FIFO goal selection and first-clause selection corresponds to an irGLP run.
+\end{proposition}
