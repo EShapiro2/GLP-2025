@@ -60,6 +60,37 @@ Note that both satisfy SO and each clause satisfies SRSW.
 \end{example}
 
 %------------------------------------------------------------------------------
+\subsection{Guards}
+\label{sec:guards}
+%------------------------------------------------------------------------------
+
+GLP clauses may include \emph{guards}---pure tests that determine clause applicability without participating in data flow.
+
+\begin{definition}[Guarded Clause]
+\label{def:guarded-clause}
+A \temph{guarded clause} has the form $H$ \verb|:-| $G$ \verb"|"  $B$, where $H$ is the head, $G$ is a conjunction of guard predicates, and $B$ is the body.  The guard separator ``\verb"|"'' distinguishes guards from the body.  A clause without guards is written $H$ \verb|:-| $B$, or equivalently $H$ \verb|:-| \verb|true|  \verb"|" $B$.
+\end{definition}
+
+Guards are evaluated before clause commitment.  Each guard has three-valued semantics: it may \emph{succeed}, \emph{fail}, or \emph{suspend} (when a required reader argument is unbound).  A clause is applicable only if all its guards succeed.  If any guard fails, the clause is skipped and the next clause is tried.  If a guard suspends, clause selection suspends pending further instantiation.
+
+\begin{example}[Guards]
+The following clause uses a guard to test groundness:
+\begin{verbatim}
+broadcast(X, Y1, Y2) :- ground(X?) | send(X?, Y1), send(X?, Y2).
+\end{verbatim}
+The guard \verb|ground(X?)| succeeds if \verb|X| is bound to a ground term, and suspends if \verb|X| is unbound.  Once the guard succeeds, the body may safely contain multiple occurrences of the reader \verb|X?|.
+\end{example}
+
+\begin{remark}[Guards and SRSW]
+\label{rem:guards-srsw}
+Guard occurrences do not count toward SRSW satisfaction.  For SRSW purposes, a variable occurs in a clause $C = (H$ \verb|:-| $G$ \verb"|" $B)$ if it occurs in $H$ or $B$; occurrences in $G$ are disregarded.  This reflects the semantic role of guards as tests rather than consumers: a guard examines a value but does not constitute the ``consumption'' that pairs with production.
+
+The \verb|ground(X)| guard relaxes the single-reader constraint for \verb|X?| within that clause's body, since multiple occurrences of a reader instantiated to a ground term cannot violate the single-writer requirement.
+\end{remark}
+
+Appendix~\ref{appendix:guards-system} provides a complete specification of guard predicates, including type guards (\verb|ground|, \verb|known|, \verb|writer|, \verb|reader|), comparison guards (\verb|=|, \verb|=\=|), and the control guard \verb|otherwise|, as well as system predicates for arithmetic evaluation and runtime services.
+
+%------------------------------------------------------------------------------
 \subsection{Operational Semantics}
 \label{sec:glp-operational}
 %------------------------------------------------------------------------------
@@ -113,11 +144,6 @@ Abstractly, the key differences between LP and GLP relate to monotonicity:  In L
 Implementation-wise, if a GLP goal $A$ cannot be reduced now, but there is a readers substitution $\sigma$ such that $A\sigma$ can be reduced, such readers are identified, the goal $A$ \emph{suspends} on these readers, and is rescheduled for reduction once any of them is assigned.
 
 Despite these differences, GLP can adopt the same notion of successful run and outcome of LP (Definition \ref{def:proper-run}), and have the same notion of logic consequence as LP.  Let $/?$ be an operator that replaces every reader by its dual writer.
-
-\mypara{Guards and system predicates}
-GLP also includes \emph{guards}---predicates that test runtime conditions (e.g., \verb|ground(X)| tests if \verb|X| contains no variables) without modifying state, appearing after clause heads separated by \verb=|=---and \emph{system predicates} that provide access to the GLP runtime state and operating system and hardware capabilities (variable state and name, arithmetic evaluation, timestamps). Guards enable conditional clause selection. The \verb|ground(X)| guard allows relaxing the single-reader constraint for \verb|X?| for the clause it occurs in, as having multiple occurrences of \verb|X?| instantiated to a ground term does not violate the fundamental single-writer requirement.
-Their specification appears in Appendix~\ref{appendix:guards-system}.
-
 
 \subsection{Term Matching Eschews Unification}
 
