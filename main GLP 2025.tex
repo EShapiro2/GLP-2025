@@ -102,16 +102,19 @@ London School of Economics and Weizmann Institute of Science\\
 \maketitle
 
 \begin{keywords}
-concurrent logic programming, grassroots platforms, secure communication, multiagent systems, cryptographic protocols
+concurrent logic programming, grassroots platforms, multiagent systems, transition systems, implementation hierarchy
 \end{keywords}
 
 \begin{abstract}
-Grassroots platforms are distributed applications run by cryptographically-identified people on their networked personal devices, where multiple disjoint platform instances emerge independently and coalesce when they interoperate. Their foundation is the grassroots social graph, upon which grassroots social networks, grassroots cryptocurrencies, and grassroots democratic federations can be built.
-
-Grassroots platforms have yet to be implemented, the key challenge being faulty and malicious participants: without secure programming support, correct participants cannot reliably identify each other, establish secure communication, or verify each other's code integrity.
-
-We present GLP, a secure, multiagent, concurrent, logic programming language for implementing grassroots platforms. GLP extends logic programs with paired single-reader/single-writer (SRSW) logic variables, providing secure communication channels among cryptographically-identified people through encrypted, signed and attested messages, which enable identity and code integrity verification.
-We present GLP progressively: logic programs, concurrent GLP, multiagent GLP, augmenting it with cryptographic security, and providing smartphone implementation-ready specifications. We prove safety properties including that GLP computations are deductions, SRSW preservation, acyclicity, and monotonicity. We prove multiagent GLP is grassroots and that GLP streams achieve blockchain security properties. We present a grassroots social graph protocol establishing authenticated peer-to-peer connections and demonstrate secure grassroots social networking applications.
+We present GLP, a concurrent logic programming language for implementing grassroots platforms, with the following components:
+\begin{enumerate}
+\item Logic programs (LP), the mathematical foundation of logic programming.
+\item Grassroots logic programs (GLP), extending LP with dual single-reader/single-writer (SRSW) variables, replacing distributed atomic unification with point-to-point communication from writers to readers.
+\item Implementation-ready GLP (irGLP), a deterministic variant with explicit scheduling and suspension handling.
+\item Multiagent GLP (maGLP), extending GLP to multiple agents via atomic transactions.
+\item A Dart implementation of irGLP for smartphone deployment.
+\end{enumerate}
+Previously, grassroots platforms were specified mathematically but not implemented, the key obstacle being the gap between abstract specifications and executable code. Here, we aim to bridge this gap by presenting GLP as a hierarchy of multiagent transition systems with implementation relations among them. We prove that GLP correctly implements LP; that irGLP correctly and completely implements GLP; and that maGLP correctly and completely implements GLP. We prove that maGLP is grassroots. We thus provide a crisp formal foundation for grassroots platforms and a solid starting point from which their secure, multiagent implementation can commence.
 \end{abstract}
 
 % Main sections
@@ -121,7 +124,6 @@ We present GLP progressively: logic programs, concurrent GLP, multiagent GLP, au
 \input{glp_section_examples}
 \input{glp_section_multiagent}
 \input{glp_section_social_graph}
-\input{glp_section_security}
 \input{glp_section_implementation}
 \input{glp_section_related_work}
 \input{glp_section_conclusion}
@@ -137,6 +139,7 @@ We present GLP progressively: logic programs, concurrent GLP, multiagent GLP, au
 \input{glp_appendix_social_networking}
 \input{glp_appendix_guards_system}
 \input{glp_appendix_additional_techniques}
+\input{glp_appendix_security}
 \input{glp_appendix_workstation}
 \input{glp_appendix_smartphone}
 
