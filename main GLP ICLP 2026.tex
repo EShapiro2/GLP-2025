@@ -1,5 +1,7 @@
-\documentclass{new_tlp}
+%\documentclass{new_tlp}
+\documentclass[sigconf, nonacm]{acmart}
 
+\let\Bbbk\relax
 % Essential packages
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -91,32 +93,28 @@
 
 \newtheorem{observation}{Observation}
 
-\begin{document}
+\title{GLP: A Grassroots, Multiagent, Concurrent,\\ Logic Programming Language}
 
-\title{GLP: A Grassroots, Multiagent, Concurrent, Logic Programming Language}
-
-\author[E. Shapiro]{EHUD SHAPIRO\\
+\author[Ehud Shapiro]{Ehud Shapiro\\
 London School of Economics and Weizmann Institute of Science\\
 (e-mail: ehud.shapiro@weizmann.ac.il)}
 
-\maketitle
 
-\begin{keywords}
-concurrent logic programming, grassroots platforms, multiagent systems, transition systems, implementation hierarchy
-\end{keywords}
+
+%\begin{keywords}
+%concurrent logic programming, grassroots platforms, multiagent systems, transition systems, implementation hierarchy
+%\end{keywords}
 
 \begin{abstract}
-We present GLP, a concurrent logic programming language for implementing grassroots platforms, with the following components:
-\begin{enumerate}
-\item Logic programs (LP), the mathematical foundation of logic programming.
-\item Grassroots logic programs (GLP), extending LP with dual single-reader/single-writer (SRSW) variables, replacing distributed atomic unification with point-to-point communication from writers to readers.
-\item Implementation-ready GLP (irGLP), a deterministic variant with explicit scheduling and suspension handling.
-\item Multiagent GLP (maGLP), extending GLP to multiple agents via atomic transactions.
-\item A Dart implementation of irGLP for smartphone deployment.
-\end{enumerate}
-Previously, grassroots platforms were specified mathematically but not implemented, the key obstacle being the gap between abstract specifications and executable code. Here, we aim to bridge this gap by presenting GLP as a hierarchy of multiagent transition systems with implementation relations among them. We prove that GLP correctly implements LP; that irGLP correctly and completely implements GLP; and that maGLP correctly and completely implements GLP. We prove that maGLP is grassroots. We thus provide a crisp formal foundation for grassroots platforms and a solid starting point from which their secure, multiagent implementation can commence.
+A digital platform is \emph{grassroots} if it can have multiple instances that operate independently of each other and of any global resource other than the network, yet may interoperate and coalesce into ever larger instances, possibly into a single global instance.
+
+Grassroots Logic Programs (GLP) is a multiagent concurrent logic programming language designed to implement grassroots platforms.  Here, we review the mathematical foundation of grassroots platforms, define GLP, prove that it is grassroots, and demonstrate its utility in implementing grassroots platforms via examples of GLP programs for  grassroots social networks and grassroots cryptocurrencies.
 \end{abstract}
 
+
+
+\begin{document}
+\maketitle
 % Main sections
 \input{glp_section_introduction}
 \input{glp_section_logic_programs}
