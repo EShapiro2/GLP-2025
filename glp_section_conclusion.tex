@@ -1,2 +1,17 @@
 \section{Conclusion}\label{section:conclusion}
-We have presented secure, multiagent, concurrent GLP, argued for its utility for implementing grassroots platforms, and provided workstation and smartphone implementation-ready specifications for it. The next step is to implement it.
+
+We have presented GLP, a secure, multiagent, concurrent logic programming language designed for implementing grassroots platforms. The key contributions are:
+
+\begin{enumerate}
+\item \textbf{Mathematical Foundations:} We recalled the framework of multiagent transition systems with atomic transactions and the key theorem that protocols over interactive transactions are grassroots.
+
+\item \textbf{GLP Definition:} We defined GLP as an extension of logic programs with reader/writer variable pairs satisfying the Single-Reader/Single-Writer (SRSW) restriction, providing asynchronous communication through term matching rather than unification.
+
+\item \textbf{Grassroots Proof:} We proved that multiagent GLP (maGLP) is grassroots by showing it is a transactions-based protocol with interactive transactions (via the Network transaction for cold calls).
+
+\item \textbf{Application Criterion:} We established that any GLP application using cold calls inherits the grassroots property from maGLP.
+
+\item \textbf{Grassroots Social Graph:} We demonstrated the utility of GLP by implementing the grassroots social graph protocol and proving it grassroots.
+\end{enumerate}
+
+The grassroots social graph serves as the infrastructure layer for other grassroots platforms. Future work includes implementing grassroots social networks, grassroots cryptocurrencies, and grassroots federations in GLP, as well as developing the Dart/Flutter implementation for smartphone deployment.
