@@ -1,30 +1,37 @@
-# Instructions for Claude Code (Terminal Interface)
+# Instructions for Claude
+
+## Division of Labor
+
+### Claude Web (Chat Interface)
+- **Paper writing and LaTeX editing** - All revisions to .tex files
+- **Discussion and planning** - Reviewing content, proposing changes
+- **Direct file editing** - Uses Filesystem tools to read/write files
+
+### Claude Code (Terminal Interface)
+- **Running GLP code** - Executing .glp programs
+- **Testing** - Running test suites
+- **Git operations** - Commits, pushes, syncs
+- **NOT for paper writing** - Do not edit .tex files
 
 ## CRITICAL - START OF EVERY CONVERSATION
 1. **READ CLAUDE.md** - Always read this file first (thoroughly)
 2. **ACKNOWLEDGE** - State that you have read this document and are ready for discussion
 3. **DO NOTHING ELSE** - Wait for user direction before any other action
-4. **MOUNT REPOSITORIES** - Clone related repos when needed:
-   - FCP: `git clone --depth 1 https://github.com/EShapiro2/FCP.git /tmp/FCP`
-   - Art-of-GLP-2025: `git clone --depth 1 https://github.com/EShapiro2/Art-of-GLP-2025.git /tmp/Art-of-GLP-2025`
-5. **IDENTIFY CURRENT MODE** - Discussion or Implementation
-6. **FOLLOW MODE RULES** - Never mix modes
 
 ## Project Overview
 
-**Repository:** GLP-2025
-**Purpose:** Academic paper "GLP: A Secure, Multiagent, Grassroots, Concurrent, Logic Programming Language"
+**Repository:** GLP-ICLP-2026
+**Purpose:** Academic paper "GLP: A Grassroots, Multiagent, Concurrent, Logic Programming Language"
 **Target Venue:** ICLP 2026 (Theory and Practice of Logic Programming)
-**Format:** TPLP (new_tlp.cls)
 **Author:** Ehud Shapiro
 
 ## Directory Structure
 
 ```
-/home/user/GLP-2025/
+/Users/udi/Grassroots/GLP-ICLP-2026/
 ├── CLAUDE.md                           # ← This file
-├── main GLP 2025.tex                   # ← Main document
-├── bib.bib                             # ← Bibliography (574 entries)
+├── main GLP ICLP 2026.tex              # ← Main document
+├── bib.bib                             # ← Bibliography
 │
 ├── STYLE FILES:
 │   ├── new_tlp.cls                     # ← TPLP document class
@@ -33,23 +40,24 @@
 │
 ├── SECTIONS (Main Content):
 │   ├── glp_section_introduction.tex
+│   ├── glp_section_concurrent_glp.tex  # ← Combined TS/LP/GLP section
+│   ├── glp_section_foundations.tex
 │   ├── glp_section_logic_programs.tex
 │   ├── glp_section_glp.tex
-│   ├── glp_section_examples.tex
 │   ├── glp_section_multiagent.tex
+│   ├── glp_section_examples.tex
 │   ├── glp_section_social_graph.tex
-│   ├── glp_section_security.tex
 │   ├── glp_section_implementation.tex
 │   ├── glp_section_related_work.tex
 │   └── glp_section_conclusion.tex
 │
 ├── APPENDICES:
-│   ├── glp_appendix_lp_syntax.tex
 │   ├── glp_appendix_proofs.tex
 │   ├── glp_appendix_social_graph_properties.tex
 │   ├── glp_appendix_social_networking.tex
 │   ├── glp_appendix_guards_system.tex
 │   ├── glp_appendix_additional_techniques.tex
+│   ├── glp_appendix_security.tex
 │   ├── glp_appendix_workstation.tex
 │   └── glp_appendix_smartphone.tex
 │
@@ -61,64 +69,51 @@
 ## Core Rules
 
 ### Do Exactly What Is Asked
-- **When the user asks something, do exactly as asked and nothing else**
+- When the user asks something, do exactly as asked and nothing else
 - Do not add extra steps, analysis, or actions beyond the specific request
 - If clarification is needed, ask first rather than assuming
 
-### Never Implement Without a Plan
-- **NEVER start editing without an agreed upon plan**
+### Never Implement Without Agreement
+- NEVER start editing without an agreed upon plan
 - First discuss and document the changes
 - Get explicit user agreement on the plan
 - Only then proceed to implementation
 
-### Instructions from Claude Web
-When receiving instructions from Claude Web (via user copy-paste):
-- **REVIEW FIRST** - Read and understand the instructions before executing
-- **RAISE CONCERNS** - Let Udi know if you have comments, questions, or see potential issues
-- **DON'T BLINDLY EXECUTE** - Wait for confirmation if something seems unclear or problematic
-
 ### Accuracy and Honesty
-- **NEVER BS, GUESS, SPECULATE, OR HALLUCINATE**
-- **IF UNSURE, SAY SO** - "I'm not sure, need to check X"
-- **NEVER REMOVE CONTENT** - Never delete text without explicit user approval
+- NEVER guess, speculate, or hallucinate
+- If unsure, say so: "I'm not sure, need to check X"
+- NEVER remove content without explicit user approval
 
 ### Communication Style
-- **BE TERSE** - Brief, direct responses
-- **NO LONG EXPLANATIONS** - Get to the point
-- **MISTAKES**: Just acknowledge - no apologies or promises
-- **NO VERBOSE POLITENESS** - Skip the fluff
+- Brief, direct responses
+- No long explanations - get to the point
+- Mistakes: Just acknowledge - no apologies or promises
 
 ## Working Modes
 
 ### Discussion Mode (DEFAULT)
-- **NO EDITS** - Not even small fixes
-- **BRIEF RESPONSES** - Show content, explain what you see
-- **STAY ON TOPIC** - Don't jump ahead
-- **WAIT FOR AGREEMENT** - Explicit "let's edit" signal needed
+- NO EDITS - Not even small fixes
+- BRIEF RESPONSES - Show content, explain what you see
+- STAY ON TOPIC - Don't jump ahead
+- WAIT FOR AGREEMENT - Explicit approval needed before editing
 
 ### Implementation Mode
-- **ONLY AFTER EXPLICIT AGREEMENT**
-- **FOLLOW GUIDANCE** - Implement what was discussed
-- **VERIFY CHANGES** - Check edits are correct
-- **REPORT RESULTS** - Show exactly what changed
-
-## Mode Transition Protocol
-1. User must explicitly say: "Discussion complete, let's implement" or similar
-2. Confirm understanding: "Moving to implementation mode"
-3. Only then modify files
+- ONLY AFTER EXPLICIT AGREEMENT
+- FOLLOW GUIDANCE - Implement what was discussed
+- VERIFY CHANGES - Check edits are correct
+- REPORT RESULTS - Show exactly what changed
 
 ## LaTeX Editing Guidelines
 
 ### Before Editing
-1. **READ THE FILE** - Always read the file before editing
-2. **UNDERSTAND CONTEXT** - Know what section you're in
-3. **PRESERVE FORMATTING** - Maintain existing style
+1. READ THE FILE - Always read the file before editing
+2. UNDERSTAND CONTEXT - Know what section you're in
+3. PRESERVE FORMATTING - Maintain existing style
 
 ### Making Edits
-1. **USE EDIT TOOL** - Not Write for existing files
-2. **SMALL CHANGES** - Make targeted edits, not wholesale rewrites
-3. **PRESERVE LABELS** - Don't change \label{} references without updating \ref{}
-4. **CHECK MATH** - Verify math mode is correct
+1. SMALL CHANGES - Make targeted edits, not wholesale rewrites
+2. PRESERVE LABELS - Don't change \label{} references without updating \ref{}
+3. CHECK MATH - Verify math mode is correct
 
 ### Common LaTeX Patterns in This Paper
 - `\mypara{Name}` - Paragraph headers
@@ -128,12 +123,7 @@ When receiving instructions from Claude Web (via user copy-paste):
 - `\udi{comment}` - Author annotations (blue)
 - `\claude{comment}` - Editor annotations (red)
 
-## Git Protocol
-
-### Branch Rules
-- **Work on assigned branch**: `claude/revise-paper-Az0EC`
-- **Commit frequently** with clear messages
-- **Push changes** after completing tasks
+## Git Protocol (Claude Code only)
 
 ### Standard Workflow
 ```bash
@@ -144,60 +134,35 @@ git status
 git add -A
 git commit -m "Description of changes"
 
-# Push to branch
-git push -u origin claude/revise-paper-Az0EC
+# Push
+git push
 ```
 
-### After Completing Work - Merge Instructions for User
+### Overleaf Workflow
+Overleaf syncs directly from GitHub's `main` branch.
+
+**To push changes to Overleaf for PDF compilation:**
 ```bash
-cd /Users/udi/GLP-2025  # or wherever user's local copy is
-git checkout main
-git pull origin main
-git fetch origin claude/revise-paper-Az0EC
-git merge -m "Merge paper revisions" origin/claude/revise-paper-Az0EC
-git push origin main
+cd /Users/udi/Grassroots/GLP-ICLP-2026 && git add -A && git commit -m "<message>" && git push
 ```
 
-## Reference Repositories
+After pushing to GitHub, pull in Overleaf (Menu → GitHub → Pull) to see the compiled PDF.
 
-### FCP (Flat Concurrent Prolog)
-- **GitHub**: https://github.com/EShapiro2/FCP
-- **Reference Release**: `/tmp/FCP/Savannah`
-- **Clone**: `git clone --depth 1 https://github.com/EShapiro2/FCP.git /tmp/FCP`
+## Related Repositories
 
-### Art-of-GLP-2025
-- **GitHub**: https://github.com/EShapiro2/Art-of-GLP-2025
-- **Main file**: `/tmp/Art-of-GLP-2025/main_AofGLP.tex`
-- **Clone**: `git clone --depth 1 https://github.com/EShapiro2/Art-of-GLP-2025.git /tmp/Art-of-GLP-2025`
+- **GLP Implementation**: `/Users/udi/Grassroots/GLP/`
+- **Moded-Types Paper**: `/Users/udi/Grassroots/Moded-Types/`
+- **Art-of-GLP-2025**: `/Users/udi/Grassroots/Art-of-GLP-2025/`
 
-## Paper Format
+## Paper Structure (Agreed Jan 2026)
 
-**Current Format:** TPLP (Theory and Practice of Logic Programming)
-- Document class: `new_tlp`
-- Bibliography style: `acmtrans`
-- Required files: `new_tlp.cls`, `acmtrans.bst`, `aopmath.sty`
-
-**Author Format:**
-```latex
-\author[E. Shapiro]{Ehud Shapiro}
-\affiliation{London School of Economics and Weizmann Institute of Science}
-\email{ehud.shapiro@weizmann.ac.il}
-\keywords{concurrent logic programming, grassroots platforms, ...}
-```
-
-## Environment Notes
-
-- **LaTeX not installed** - Cannot compile locally; user compiles on their machine
-- **No `tail`, `head`, `grep`** - Use Read tool or full file output
-- **Working directory**: `/home/user/GLP-2025`
+1. Introduction (revise when main content done)
+2. Concurrent GLP (TS, LP as TS, GLP, examples, social graph with network switch)
+3. maGLP (MTS, maGLP definition, MA social graph - NOT grassroots yet)
+4. maGLP is Grassroots (grassroots definition, proofs, corollaries)
+5. Related Work
+6. Conclusion
 
 ## #remember Directive
 
 When the user says `#remember <something>`, add that information to this CLAUDE.md file so it persists across sessions.
-
-## Important Insights (Lessons Learned)
-
-### Format Conversion (Jan 2026)
-- Converted from LNCS (llncs) to TPLP (new_tlp) format for ICLP 2026
-- Removed: thmtools, thm-restate option, TOC, titlerunning, authorrunning
-- Added: aopmath package, keywords, email, affiliation format

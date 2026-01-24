@@ -1,0 +1,367 @@
+%==============================================================================
+\section{Concurrent GLP}
+\label{sec:glp}
+%==============================================================================
+
+This section presents Grassroots Logic Programs (GLP), a concurrent logic programming language. We begin with transition systems, recall logic programs (LP) as transition systems, and then extend LP to GLP. We illustrate GLP with programming examples and conclude with the grassroots social graph---the foundational platform that all other grassroots platforms build upon.
+
+%------------------------------------------------------------------------------
+\subsection{Transition Systems}
+\label{sec:ts}
+%------------------------------------------------------------------------------
+
+\begin{definition}[Transition System, Computation, Run]\label{def:ts}
+A \temph{transition system} is a tuple $TS=(S,s_0,T)$, where $S$ is a non-empty set of \temph{states}, $s_0\in S$ is the \temph{initial state}, and $T\subset S^2$ is a set of \temph{transitions}, where each transition $t\in T$ is a pair $(s,s')$ of distinct states, written $s\rightarrow s'$.
+A \temph{computation} is a sequence of states $s_1,s_2,\ldots$ such that $s_i\rightarrow s_{i+1} \in T$ for each consecutive pair. A \temph{run} is a computation starting from $s_0$.
+\end{definition}
+
+%------------------------------------------------------------------------------
+\subsection{Logic Programs as Transition Systems}
+\label{sec:lp-ts}
+%------------------------------------------------------------------------------
+
+We assume familiarity with standard Logic Programs (LP): terms, goals, clauses, substitutions, and most-general unifiers (mgu). We cast LP operationally as a transition system.
+
+\begin{definition}[LP Transition System]
+\label{def:lp-ts}
+Given a logic program $P$ and initial goal $G_0$, the \temph{LP transition system} $LP(P) = (C, c_0, T)$ has configurations $C = \mathcal{G}(P) \times \Sigma$ (goal--substitution pairs), initial configuration $c_0 = (G_0, \emptyset)$, and transitions $(G,\sigma) \rightarrow (G',\sigma')$ such that for some unit goal $A \in G$ and clause $H$ \verb|:-| $B \in P$ (renamed apart from $G$), $A$ and $H$ have mgu $\hat\sigma$, $G' = (G \setminus \{A\} \cup B)\hat\sigma$, and $\sigma' = \sigma \circ \hat\sigma$.
+\end{definition}
+
+LP has two forms of nondeterminism: choice of goal $A \in G$ (\emph{and-nondeterminism}) and choice of clause $C \in P$ (\emph{or-nondeterminism}).
+
+%------------------------------------------------------------------------------
+\subsection{GLP: Extending LP with Reader/Writer Variables}
+\label{sec:glp-ext}
+%------------------------------------------------------------------------------
+
+Grassroots Logic Programs (GLP) extend LP by (1) adding a paired \emph{reader} $X?$ to every ``ordinary'' logic variable $X$, now called a \emph{writer}, (2) restricting variables in goals and clauses to have at most a single occurrence (SO), (3) requiring that a variable occurs in a clause iff its paired variable also occurs in it (single-reader single-writer, SRSW). The result eschews unification in favour of simple term matching, is linear-logic-like, and is futures/promises-like: each assignment $X := T$ is produced at most once via the sole writer (promise) $X$, and consumed at most once via its sole paired reader (future) $X?$.
+
+\begin{definition}[GLP Variables]
+\label{def:glp-variables}
+Let $\calV$ be the set of LP variables, henceforth called \temph{writers}. Define $\calV? = \{X? \mid X \in \calV\}$, called \temph{readers}. The set of all GLP variables is $\hat\calV = \calV \cup \calV?$. A writer $X$ and its reader $X?$ form a \temph{variable pair}.
+\end{definition}
+
+\begin{definition}[Single-Occurrence (SO) and Single-Reader/Single-Writer (SRSW)]
+\label{def:so-srsw}
+A term, goal, or clause satisfies \temph{SO} if every variable occurs in it at most once.
+A clause $C$ satisfies \temph{SRSW} if it satisfies SO and a variable occurs in $C$ iff its paired variable also occurs in $C$.
+A \temph{GLP program} is a finite set of clauses satisfying SRSW.
+\end{definition}
+
+The SO invariant is preserved: reducing a goal satisfying SO with a clause satisfying SRSW yields a goal satisfying SO (Proposition~\ref{prop:so-preservation}). The SRSW restriction prevents multiple writers racing to bind a variable.
+
+\begin{example}[Fair Merge]
+\label{ex:merge}
+The quintessential concurrent logic program for fairly merging two streams:
+\begin{verbatim}
+merge([X|Xs], Ys, [X?|Zs?]) :- merge(Ys?, Xs?, Zs).
+merge(Xs, [Y|Ys], [Y?|Zs?]) :- merge(Xs?, Ys?, Zs).
+merge(Xs, [], Xs?).
+merge([], Ys, Ys?).
+\end{verbatim}
+Each clause satisfies SRSW. The first two clauses swap inputs in recursive calls, ensuring fairness when both streams are available.
+\end{example}
+
+%------------------------------------------------------------------------------
+\subsection{GLP Operational Semantics}
+\label{sec:glp-operational}
+%------------------------------------------------------------------------------
+
+\begin{definition}[Writer and Reader Assignments]
+\label{def:assignments}
+A \temph{writer assignment} $X := T$ has $X \in \calV$ and $T \notin \calV$ satisfying SO.
+A \temph{reader assignment} $X? := T$ has $X? \in \calV?$ and $T \notin \calV$ satisfying SO.
+Given a writer assignment $X := T$, its \temph{readers counterpart} is $X? := T$.
+\end{definition}
+
+\begin{definition}[GLP Transition System]
+\label{def:glp-ts}
+Given a GLP program $P$ and initial goal $G_0$ satisfying SO, the \temph{GLP transition system} $GLP(P) = (\calC, c_0, \calT)$ has:
+\begin{itemize}
+    \item Configurations $\calC$: pairs $(G, \sigma)$ where $G$ is a goal and $\sigma$ is a readers substitution
+    \item Initial configuration $c_0 = (G_0, \emptyset)$
+    \item Transitions $(G, \sigma) \rightarrow (G', \sigma')$ of two kinds:
+    \begin{enumerate}
+        \item \textbf{Reduce:} For unit goal $A \in G$, clause $C \in P$ is the \emph{first} clause for which the writer mgu of $A$ and (renamed) head $H$ succeeds with $(B, \hat\sigma)$; then $G' = (G \setminus \{A\} \cup B)\hat\sigma$ and $\sigma' = \sigma \circ \hat\sigma?$
+        \item \textbf{Communicate:} $\{X := T\} \in \sigma$, $X? \in G$, $G' = G\{X? := T\}$, $\sigma' = \sigma$
+    \end{enumerate}
+\end{itemize}
+\end{definition}
+
+GLP differs from LP in two key ways: (1) using writer mgu instead of regular mgu---if matching requires binding a reader, the goal \emph{suspends} rather than fails; (2) choosing the \emph{first} applicable clause, enabling fair concurrent programs like merge.
+
+The Communicate transition realizes asynchronous message passing: when a writer $X$ is bound to $T$, the reader assignment $X? := T$ is added to $\sigma$; later, when $X?$ occurs in a goal, the assignment is applied.
+
+%------------------------------------------------------------------------------
+\subsection{Term Matching}
+\label{sec:term-matching}
+%------------------------------------------------------------------------------
+
+The SO invariant allows eschewing unification in favour of \emph{term matching}:
+
+\begin{definition}[Term Matching]
+\label{def:term-matching}
+Given terms $T_1$ and $T_2$ jointly satisfying SO, their \temph{term matching} traverses both term-trees jointly:
+\begin{center}
+\begin{tabular}{l|lll}
+$T_1 \backslash T_2$ & Writer $X_2$ & Reader $X_2?$ & Term $f_2/n_2$ \\
+\hline
+Writer $X_1$ & fail & $X_1 := X_2?$ & $X_1 := T_2$ \\
+Reader $X_1?$ & $X_2 := X_1?$ & fail & suspend on $X_1?$\\
+Term $f_1/n_1$ & $X_2 := T_1$ & fail & fail if $f_1 \ne f_2$ or $n_1 \ne n_2$\\
+\end{tabular}
+\end{center}
+The writer mgu is the union of all writer assignments if no fail occurred and the suspension set is empty.
+\end{definition}
+
+%------------------------------------------------------------------------------
+\subsection{Guards}
+\label{sec:guards}
+%------------------------------------------------------------------------------
+
+GLP clauses may include \emph{guards}---tests that determine clause applicability.
+
+\begin{definition}[Guarded Clause]
+\label{def:guarded-clause}
+A \temph{guarded clause} has the form $H$ \verb|:-| $G$ \verb"|" $B$, where $H$ is the head, $G$ is a guard conjunction, and $B$ is the body.
+\end{definition}
+
+Guards have three-valued semantics: \emph{succeed}, \emph{suspend} (may succeed after further instantiation), or \emph{fail} (can never succeed). A clause is applicable only when all guards succeed; if any guard fails, the next clause is tried; if a guard suspends, clause selection suspends.
+
+Guard predicates include type tests (\verb|integer|, \verb|ground|, \verb|known|, etc.), arithmetic comparisons (\verb|<|, \verb|=:=|, etc.), and ground equality (\verb|=?=|).
+
+%------------------------------------------------------------------------------
+\subsection{Safety Properties}
+\label{sec:glp-safety}
+%------------------------------------------------------------------------------
+
+\begin{proposition}[GLP Computation is Deduction]
+\label{prop:glp-deduction}
+Let $/?$ replace every reader by its paired writer. If $(G_0$ \verb|:-| $G_n)\sigma$ is the outcome of a proper GLP run, then $(G_0$ \verb|:-| $G_n)\sigma/?$ is a logical consequence of $P/?$.
+\end{proposition}
+
+\begin{proposition}[SO Preservation]
+\label{prop:so-preservation}
+If the initial goal $G_0$ satisfies SO, then every goal in the GLP run satisfies SO.
+\end{proposition}
+
+\begin{proposition}[Monotonicity]
+\label{prop:glp-monotonicity}
+If unit goal $A$ can reduce with clause $C$ at step $i$, then either $A$ has been reduced by step $j > i$, or an instance of $A$ can still reduce with $C$ at step $j$.
+\end{proposition}
+
+Proofs appear in Appendix~\ref{appendix:proofs}.
+
+%------------------------------------------------------------------------------
+\subsection{Programming Examples}
+\label{sec:examples}
+%------------------------------------------------------------------------------
+
+\begin{example}[Stream Distribution]
+\label{ex:distribute}
+Broadcasting to multiple consumers uses the \verb|ground| guard to enable safe replication:
+\begin{verbatim}
+distribute([X|Xs], Ys1, Ys2) :- ground(X?) |
+    Ys1 = [X?|Ys1a], Ys2 = [X?|Ys2a], distribute(Xs?, Ys1a?, Ys2a?).
+distribute([], [], []).
+\end{verbatim}
+When \verb|X?| is ground, multiple occurrences in the body do not violate SRSW.
+\end{example}
+
+\begin{example}[Lookup in Association List]
+\label{ex:lookup}
+\begin{verbatim}
+lookup(Key, [(K, Value)|_], Value?) :- Key? =?= K? | true.
+lookup(Key, [_|Rest], Value?) :- otherwise | lookup(Key?, Rest?, Value).
+\end{verbatim}
+The \verb|=?=| guard tests ground equality; \verb|otherwise| succeeds when no prior clause applies.
+\end{example}
+
+\begin{example}[Deferred Message Injection]
+\label{ex:inject}
+The \verb|inject| predicate inserts a message into a stream when a trigger variable becomes bound:
+\begin{verbatim}
+inject(Trigger, Msg, Ys, [Msg?|Ys?]) :- known(Trigger?) | true.
+inject(Trigger, Msg, [Y|Ys], [Y?|Ys1?]) :- 
+    otherwise | inject(Trigger?, Msg?, Ys?, Ys1).
+\end{verbatim}
+Until \verb|Trigger| is bound, messages pass through unchanged; when bound, \verb|Msg| is inserted.
+\end{example}
+
+%------------------------------------------------------------------------------
+\subsection{The Grassroots Social Graph}
+\label{sec:social-graph}
+%------------------------------------------------------------------------------
+
+The grassroots social graph is the foundational platform upon which all other grassroots platforms are built. Nodes represent cryptographically-identified agents; edges represent authenticated bidirectional channels; connected components arise spontaneously through befriending.
+
+We present the social graph as a single-agent GLP program, using a \emph{network switch} to simulate communication between agents. This demonstrates the program structure before introducing multiagent GLP in Section~\ref{sec:maglp}.
+
+\subsubsection{Agent Structure}
+
+Each agent processes messages from a unified input stream, maintaining a friends list that maps names to output streams:
+
+\begin{verbatim}
+agent(Id, ch(UserIn, UserOut), ch(NetIn, NetOut)) :-
+    merge(UserIn?, NetIn?, In),
+    social_graph(Id?, In?, [(user, UserOut), (net, NetOut)]).
+\end{verbatim}
+
+The agent merges user and network input streams, then enters the main event loop \verb|social_graph| with the agent's identity, merged input, and initial friends list containing channels to the user interface and network.
+
+\subsubsection{Cold-Call Befriending Protocol}
+
+The cold-call protocol enables agents to establish friendship without prior shared variables:
+
+\begin{verbatim}
+%% User requests connection
+social_graph(Id, [msg(user, Id?, connect(Target))|In], Fs) :-
+    ground(Id?), ground(Target?) |
+    lookup_send(net, msg(Id?, Target?, intro(Id?, Id?, Resp)), Fs?, Fs1),
+    inject(Resp?, msg(Target?, Id?, response(Resp?)), In?, In1),
+    social_graph(Id?, In1?, Fs1?).
+
+%% Receive introduction offer
+social_graph(Id, [msg(From, Id?, intro(From?, From?, Resp))|In], Fs) :-
+    ground(Id?), ground(From?) |
+    lookup_send(user, msg(agent, user, befriend(From?, Resp?)), Fs?, Fs1),
+    social_graph(Id?, In?, Fs1?).
+
+%% User accepts/rejects
+social_graph(Id, [msg(user, Id?, decision(Dec, From, Resp?))|In], Fs) :-
+    ground(Id?) |
+    bind_response(Dec?, From?, Resp, Fs?, Fs1, In?, In1),
+    social_graph(Id?, In1?, Fs1?).
+
+%% Process response to our introduction
+social_graph(Id, [msg(From, Id?, response(Resp))|In], Fs) :-
+    ground(Id?) |
+    handle_response(Resp?, From?, Fs?, Fs1, In?, In1),
+    social_graph(Id?, In1?, Fs1?).
+\end{verbatim}
+
+\subsubsection{Channel Establishment}
+
+When an offer is accepted, both agents establish symmetric channels:
+
+\begin{verbatim}
+bind_response(yes, From, accept(ch(FOut?, FIn)), Fs, Fs1?, In, In1?) :-
+    handle_response(accept(ch(FIn?, FOut)), From?, Fs?, Fs1, In?, In1).
+bind_response(no, _, no, Fs, Fs?, In, In?).
+
+handle_response(accept(ch(FIn, FOut)), From, Fs, [(From?, FOut?)|Fs?], In, In1?) :-
+    ground(From?) |
+    tag_stream(From?, FIn?, Tagged),
+    merge(In?, Tagged?, In1).
+handle_response(no, _, Fs, Fs?, In, In?).
+\end{verbatim}
+
+The channel pair \verb|ch(FOut?, FIn)| and \verb|ch(FIn?, FOut)| are complementary: each agent's input is the other's output.
+
+\subsubsection{Friend-Mediated Introduction}
+
+Once agents are friends, they can introduce each other to third parties. The introducer creates a fresh channel pair and sends each half to the respective parties:
+
+\begin{verbatim}
+%% User requests introduction: introduce(P, Q)
+social_graph(Id, [introduce(P, Q)|In], Fs) :-
+    ground(Id?), ground(P?), ground(Q?) |
+    lookup_send(P?, msg(Id?, P?, intro(Q?, ch(QtoP?, PtoQ))), Fs?, Fs1, _),
+    lookup_send(Q?, msg(Id?, Q?, intro(P?, ch(PtoQ?, QtoP))), Fs1?, Fs2, _),
+    social_graph(Id?, In?, Fs2?).
+
+%% Receive introduction offer from friend
+social_graph(Id, [msg(From, Id?, intro(Other, Ch))|In], Fs) :-
+    ground(Id?), ground(From?), ground(Other?) |
+    lookup_send(user, intro_offer(From?, Other?, Ch?), Fs?, Fs1, _),
+    social_graph(Id?, In?, Fs1?).
+
+%% User accepts introduction
+social_graph(Id, [accept_intro(Other, ch(FIn, FOut))|In], Fs) :-
+    ground(Id?), ground(Other?) |
+    tag_stream(Other?, FIn?, Tagged),
+    merge(In?, Tagged?, In1),
+    social_graph(Id?, In1?, [(Other?, FOut?)|Fs?]).
+\end{verbatim}
+
+When Bob types \verb|introduce(alice, charlie)|, he creates a channel pair with writers \verb|PtoQ| and \verb|QtoP|. Alice receives \verb|ch(QtoP?, PtoQ)|---she reads from Charlie via \verb|QtoP?| and writes to Charlie via \verb|PtoQ|. Charlie receives the complementary \verb|ch(PtoQ?, QtoP)|. When both accept, they become direct friends without Bob's further involvement.
+
+\subsubsection{Network Switch Simulation}
+
+In deployment, agents communicate through a physical network. In simulation, a \verb|network| process routes messages between agents. For two agents:
+
+\begin{verbatim}
+%% Alice sends to Bob
+network2((alice, ch([msg(alice, bob, X)|AliceIn], AliceOut?)),
+         (bob, ch(BobIn, [msg(alice, bob, X?)|BobOut?]))) :-
+    network2((alice, ch(AliceIn?, AliceOut)),
+             (bob, ch(BobIn?, BobOut))).
+
+%% Bob sends to Alice
+network2((alice, ch(AliceIn, [msg(bob, alice, X?)|AliceOut?])),
+         (bob, ch([msg(bob, alice, X)|BobIn], BobOut?))) :-
+    network2((alice, ch(AliceIn?, AliceOut)),
+             (bob, ch(BobIn?, BobOut))).
+\end{verbatim}
+
+For three agents, the switch routes between all pairs. We show two representative clauses:
+
+\begin{verbatim}
+%% Alice to Bob
+network3((alice, ChA), (bob, ChB), (charlie, ChC)) :-
+    ChA? = ch([msg(alice, bob, X)|InA], OutA),
+    ChB? = ch(InB, [msg(alice, bob, X?)|OutB]) |
+    network3((alice, ch(InA?, OutA?)), (bob, ch(InB?, OutB)), (charlie, ChC?)).
+
+%% Bob to Charlie
+network3((alice, ChA), (bob, ChB), (charlie, ChC)) :-
+    ChB? = ch([msg(bob, charlie, X)|InB], OutB),
+    ChC? = ch(InC, [msg(bob, charlie, X?)|OutC]) |
+    network3((alice, ChA?), (bob, ch(InB?, OutB?)), (charlie, ch(InC?, OutC))).
+\end{verbatim}
+
+The remaining four clauses (Alice to Charlie, Bob to Alice, Charlie to Alice, Charlie to Bob) follow the same structure. The network switch simulates the Network transaction introduced in Section~\ref{sec:maglp}.
+
+\subsubsection{Complete Plays}
+
+A \emph{play} simulates a scenario by spawning agents and driving them with scripted \emph{actors}.
+
+\mypara{Cold-Call Play} Alice initiates contact with Bob through the network:
+
+\begin{verbatim}
+play_cold_call :-
+    network2((alice, ch(AliceNetOut?, AliceNetIn)),
+             (bob, ch(BobNetOut?, BobNetIn))),
+    agent(alice, ch(AliceUserIn?, AliceUserOut), ch(AliceNetIn?, AliceNetOut)),
+    agent(bob, ch(BobUserIn?, BobUserOut), ch(BobNetIn?, BobNetOut)),
+    alice_actor(AliceUserOut?, AliceUserIn),
+    bob_actor(BobUserOut?, BobUserIn).
+
+alice_actor(_, [msg(user, alice, connect(bob))]).
+bob_actor([msg(agent, user, befriend(From, Resp))|_],
+          [msg(user, bob, decision(yes, From?, Resp?))|_]).
+\end{verbatim}
+
+Alice's actor initiates connection; Bob's actor waits for the befriend request and accepts. The play terminates with both agents as friends.
+
+\mypara{Friend-Mediated Introduction Play} Bob, who knows both Alice and Charlie, introduces them:
+
+\begin{verbatim}
+play_introduction :-
+    network3((alice, ch(AliceNetOut?, AliceNetIn)),
+             (bob, ch(BobNetOut?, BobNetIn)),
+             (charlie, ch(CharlieNetOut?, CharlieNetIn))),
+    agent(alice, ch(AliceUserIn?, AliceUserOut), ch(AliceNetIn?, AliceNetOut)),
+    agent(bob, ch(BobUserIn?, BobUserOut), ch(BobNetIn?, BobNetOut)),
+    agent(charlie, ch(CharlieUserIn?, CharlieUserOut), 
+          ch(CharlieNetIn?, CharlieNetOut)),
+    alice_intro_actor(AliceUserOut?, AliceUserIn),
+    bob_intro_actor(BobUserOut?, BobUserIn),
+    charlie_intro_actor(CharlieUserOut?, CharlieUserIn).
+
+bob_intro_actor(_, [introduce(alice, charlie)]).
+alice_intro_actor([intro_offer(bob, charlie, Ch)|_], [accept_intro(charlie, Ch?)]).
+charlie_intro_actor([intro_offer(bob, alice, Ch)|_], [accept_intro(alice, Ch?)]).
+\end{verbatim}
+
+Bob's actor initiates the introduction; Alice and Charlie's actors wait for the offer and accept. The play terminates with Alice and Charlie as direct friends, able to communicate without Bob's mediation.
