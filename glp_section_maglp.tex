@@ -103,7 +103,6 @@ The safety properties established for single-agent GLP extend to maGLP.
 The safety properties established for GLP in Section~\ref{sec:glp} extend to maGLP:
 \begin{enumerate}
 \item \textbf{SO Preservation} (cf.\ Proposition~\ref{prop:so-preservation}): If the initial goals of all agents satisfy SO, then every goal in every agent's resolvent throughout the run satisfies SO.
-\item \textbf{Acyclicity} (cf.\ Proposition~\ref{prop:acyclicity}): If the initial goals of all agents contain no circular terms, then no goal in any agent's resolvent contains a circular term.
 \item \textbf{Monotonicity} (cf.\ Proposition~\ref{prop:glp-monotonicity}): If unit goal $A$ in agent $p$'s resolvent can reduce with clause $C$ at step $i$, then at any step $j > i$, either $A$ has been reduced or there exists $A'$ in $p$'s resolvent where $A' = A\tau$ for some reader substitution $\tau$, and $A'$ can reduce with $C$.
 \end{enumerate}
 \end{proposition}

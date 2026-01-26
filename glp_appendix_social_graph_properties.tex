@@ -4,7 +4,7 @@
 
 The social graph protocol achieves non-blocking operation through careful use of unbound variables and the \verb|inject| procedure. When initiating connections, agents send offers containing unbound response variables and continue processing other messages while awaiting responses. Similarly, when receiving offers, agents query their users for approval without blocking the main protocol loop. 
 
-The \verb|inject| procedure in Program~\ref{program:social-graph} implements deferred message insertion: when \verb|X| is unbound, \verb|inject| passes input stream messages to its output whilst waiting for \verb|X| to become bound. Once \verb|X| is known, it inserts the message and terminates. This ensures the protocol remains responsive while awaiting responses to connection attempts, preventing any single pending operation from blocking the entire message processing loop.
+The \verb|inject| procedure (see Appendix~\ref{appendix:social-graph-complete}) implements deferred message insertion: when \verb|X| is unbound, \verb|inject| passes input stream messages to its output whilst waiting for \verb|X| to become bound. Once \verb|X| is known, it inserts the message and terminates. This ensures the protocol remains responsive while awaiting responses to connection attempts, preventing any single pending operation from blocking the entire message processing loop.
 
 
 \subsection{Protocol Properties}

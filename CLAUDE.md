@@ -68,6 +68,12 @@
 
 ## Core Rules
 
+### CRITICAL: Filesystem Access
+- **Bash/shell commands DO NOT WORK** on the user's local filesystem
+- Use ONLY the Filesystem tools (read_text_file, edit_file, write_file, search_files, list_directory)
+- NEVER use bash_tool for file operations on /Users/udi/
+- For git operations, provide commands for the USER to run manually
+
 ### Do Exactly What Is Asked
 - When the user asks something, do exactly as asked and nothing else
 - Do not add extra steps, analysis, or actions beyond the specific request

@@ -29,7 +29,7 @@ For the inductive step, assume $G$ satisfies SO and consider a transition $(G, \
 \begin{itemize}
     \item \emph{Reduce transition}: Goal $A \in G$ reduces with clause $C = (H \mathrel{\mbox{\texttt{:-}}} B)$ via writer mgu $\hat\sigma$, yielding $G' = (G \setminus \{A\} \cup B)\hat\sigma$. Since $C$ satisfies SRSW, it satisfies SO. Since $C$ is renamed apart from $G$, the variables in $B$ are fresh. The writer mgu $\hat\sigma$ maps writers in $A$ to subterms of $H$ and vice versa; by SO of both $G$ and $C$, each variable is assigned at most once. Applying $\hat\sigma$ to $(G \setminus \{A\} \cup B)$ replaces each variable by a term containing fresh variables (from $B$) or ground subterms. Since no variable in $G \setminus \{A\}$ occurs in $A$ (by SO of $G$), and no variable in $B$ occurs in $G$ (by renaming apart), $G'$ satisfies SO.
     
-    \item \emph{Communicate transition}: $G' = G\hat\sigma?$ where $\hat\sigma? = \{X? := T\}$. Since $G$ satisfies SO, $X?$ occurs at most once in $G$. Replacing this single occurrence by $T$ (which satisfies SO by Definition~\ref{def:assignments}) preserves SO, provided $T$ shares no variables with the rest of $G$. By the proper run condition, variables in $T$ are fresh, so $G'$ satisfies SO.
+    \item \emph{Communicate transition}: $G' = G\hat\sigma?$ where $\hat\sigma? = \{X? := T\}$. Since $G$ satisfies SO, $X?$ occurs at most once in $G$. Replacing this single occurrence by $T$ (which satisfies SO by Definition~\ref{def:writers-assignment}) preserves SO, provided $T$ shares no variables with the rest of $G$. By the proper run condition, variables in $T$ are fresh, so $G'$ satisfies SO.
 \end{itemize}
 \end{proof}
 
