@@ -107,7 +107,7 @@ The \texttt{export} helper updates the variable table when term $T$ is sent outs
 Set $T' := T$
 \item For each variable $Y$ occurring in $T$:
     \begin{itemize}
-    \item \textbf{Local:} If $Y$ created by $p$ and $(Y, p, \cdot) \notin V'_p$: add $(Y, p, \bot)$ to $V'_p$
+    \item \textbf{Local:} If $Y$ created by $p$: let $Y'$ be the paired variable; if $(Y', p, \cdot) \notin V'_p$ then add $(Y', p, \bot)$ to $V'_p$
     \item \textbf{Non-local:} If $Y$ created by $q \neq p$ then
         \begin{itemize}
         \item \textbf{Writer or Non-requested Reader:} If $Y \in V$ or $(Y, q, \bot) \in V'_p$ then remove $(Y, q, \cdot)$ from $V'_p$
@@ -187,7 +187,10 @@ The binary Communicate transaction $(c_p,c_q) \rightarrow (c'_p,c'_q)$ where $p 
     \end{itemize}
     \item Else if $(X?, q, \bot) \in V'_q$ (created reader, no request yet):
     \begin{itemize}
-        \item Store value: update to $(X?, q, T)$ in $V'_q$
+        \item Let $R = $ reactivate$(X?)$ for agent $q$ (modifies $S'_q$)
+        \item Apply $\{X?:=T\}$ to $A'_q$, $S'_q$, and $F'_q$
+        \item $A'_q := A'_q \cdot R$
+        \item Remove $(X?, q, \bot)$ from $V'_q$
     \end{itemize}
     \item Else if $(X?, r, s) \in V'_q$ where $r \neq q$ (imported reader):
     \begin{itemize}
