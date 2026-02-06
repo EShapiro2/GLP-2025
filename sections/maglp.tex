@@ -117,8 +117,12 @@ Let $L$ be the transition system whose resolvent is the union of all local resol
 
 \begin{lemma}[maGLP Persistence]
 \label{lem:maglp-persistence}
-maGLP is persistent: all transactions, once enabled, remain enabled until taken. Reduce persistence follows from GLP persistence (Lemma~\ref{lem:persistence}); Communicate and Cold-call transactions remain enabled since Reduce transitions do not remove reader assignments or network messages.
+maGLP is persistent.
 \end{lemma}
+
+\begin{proof}
+Reduce persistence follows from GLP persistence (Lemma~\ref{lem:persistence}). Communicate and Cold-call transactions remain enabled since Reduce transitions do not remove reader assignments or network messages.
+\end{proof}
 
 \begin{definition}[maGLP Fair Run]
 \label{def:maglp-fair-run}

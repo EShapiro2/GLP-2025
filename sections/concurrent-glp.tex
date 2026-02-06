@@ -182,8 +182,12 @@ A transition system is \temph{persistent} if every enabled transition remains en
 
 \begin{lemma}[GLP Persistence]
 \label{lem:persistence}
-GLP is persistent. For Reduce: if a Reduce transition is enabled for goal $A$ in configuration $(G, \sigma_r)$, it remains enabled in any configuration $(G, \sigma'_r)$ with $\sigma_r \subseteq \sigma'_r$, since other Reduce transitions bind disjoint writers (by SO) and Communicate transitions only instantiate readers. For Communicate: applying $\{X? := T\} \in \sigma$ to $X? \in G$ remains enabled since Reduce transitions do not remove assignments from $\sigma$ and other Communicate transitions apply different assignments.
+GLP is persistent.
 \end{lemma}
+
+\begin{proof}
+For Reduce: if a Reduce transition is enabled for goal $A$ in configuration $(G, \sigma_r)$, it remains enabled in any configuration $(G, \sigma'_r)$ with $\sigma_r \subseteq \sigma'_r$, since other Reduce transitions bind disjoint writers (by SO) and Communicate transitions only instantiate readers. For Communicate: applying $\{X? := T\} \in \sigma$ to $X? \in G$ remains enabled since Reduce transitions do not remove assignments from $\sigma$ and other Communicate transitions apply different assignments.
+\end{proof}
 
 \begin{definition}[Fair Run]
 \label{def:fair-run}
