@@ -1,10 +1,13 @@
 \section{Deferred Proofs}\label{appendix:proofs}
 
-This appendix contains proofs of propositions from Section~\ref{sec:glp}.
+This appendix contains deferred proofs from Sections~\ref{sec:glp}, \ref{sec:maglp}, and~\ref{sec:grassroots}.
 
-\begin{proposition*}[\ref{prop:glp-deduction}, GLP Computation is Deduction]
-Let $/?$ replace every reader by its paired writer. If $(G_0$ \verb|:-| $G_n)\sigma$ is the outcome of a proper GLP run, then $(G_0$ \verb|:-| $G_n)\sigma/?$ is a logical consequence of $P/?$.
-\end{proposition*}
+%------------------------------------------------------------------------------
+\subsection{GLP Proofs}
+\label{app:glp-proofs}
+%------------------------------------------------------------------------------
+
+\propGLPDeduction*
 
 \begin{proof}
 The $/\!?$ operator replaces every reader $X?$ by its paired writer $X$, transforming GLP terms into LP terms. We show that the GLP run $\rho$ corresponds to an LP run $\rho/?$ of $LP(P/?)$.
@@ -18,9 +21,7 @@ Consider a GLP transition $(G, \sigma) \rightarrow (G', \sigma')$:
 Thus each GLP transition corresponds to zero or one LP transitions, and the GLP run $\rho$ projects to an LP run $\rho/?$ of $LP(P/?)$. By standard LP soundness, the outcome of $\rho/?$ is a logical consequence of $P/?$.
 \end{proof}
 
-\begin{proposition*}[\ref{prop:so-preservation}, SO Preservation]
-If the initial goal $G_0$ satisfies SO, then every goal in the GLP run satisfies SO.
-\end{proposition*}
+\propSOPreservation*
 
 \begin{proof}
 By induction on the length of the run. The base case is immediate: $G_0$ satisfies SO by assumption.
@@ -28,28 +29,104 @@ By induction on the length of the run. The base case is immediate: $G_0$ satisfi
 For the inductive step, assume $G$ satisfies SO and consider a transition $(G, \sigma) \rightarrow (G', \sigma')$:
 \begin{itemize}
     \item \emph{Reduce transition}: Goal $A \in G$ reduces with clause $C = (H \mathrel{\mbox{\texttt{:-}}} B)$ via writer mgu $\hat\sigma$, yielding $G' = (G \setminus \{A\} \cup B)\hat\sigma$. Since $C$ satisfies SRSW, it satisfies SO. Since $C$ is renamed apart from $G$, the variables in $B$ are fresh. The writer mgu $\hat\sigma$ maps writers in $A$ to subterms of $H$ and vice versa; by SO of both $G$ and $C$, each variable is assigned at most once. Applying $\hat\sigma$ to $(G \setminus \{A\} \cup B)$ replaces each variable by a term containing fresh variables (from $B$) or ground subterms. Since no variable in $G \setminus \{A\}$ occurs in $A$ (by SO of $G$), and no variable in $B$ occurs in $G$ (by renaming apart), $G'$ satisfies SO.
-    
+
     \item \emph{Communicate transition}: $G' = G\hat\sigma?$ where $\hat\sigma? = \{X? := T\}$. Since $G$ satisfies SO, $X?$ occurs at most once in $G$. Replacing this single occurrence by $T$ (which satisfies SO by Definition~\ref{def:writers-assignment}) preserves SO, provided $T$ shares no variables with the rest of $G$. By the proper run condition, variables in $T$ are fresh, so $G'$ satisfies SO.
 \end{itemize}
 \end{proof}
 
-\begin{proposition*}[\ref{prop:glp-monotonicity}, Monotonicity]
-If unit goal $A$ can reduce with clause $C$ at step $i$, then either $A$ has been reduced by step $j > i$, or an instance of $A$ can still reduce with $C$ at step $j$.
-\end{proposition*}
+\propMonotonicity*
 
 \begin{proof}
 Suppose goal $A$ can reduce with clause $C$ at step $i$, meaning the writer mgu of $A$ and the head $H$ of (a renaming of) $C$ succeeds. Consider what can change between steps $i$ and $j > i$:
 \begin{itemize}
     \item \emph{Reduce transitions on other goals}: These do not affect $A$ directly. By SO, no other goal shares a writer with $A$, so no other reduction can bind a writer in $A$.
-    
+
     \item \emph{Communicate transitions}: These bind readers, not writers. A communicate transition $X? := T$ may instantiate a reader $X? \in A$, yielding $A' = A\{X? := T\}$. We show $A'$ can still reduce with $C$:
-    
+
     The original writer mgu succeeded, meaning at position $p$ where $X?$ occurred in $A$, either (a) $H$ had a writer $Y$ at position $p$, yielding assignment $Y := X?$, or (b) $H$ had a reader $Y?$ at position $p$, which would have caused failure (reader-reader), contradiction.
-    
+
     In case (a), after the communicate transition, $A'$ has $T$ at position $p$. The clause $C$ (renamed apart for $A'$) has a fresh writer $Y'$ at position $p$. The writer mgu now yields $Y' := T$, which succeeds.
-    
+
     \item \emph{Reduce transition on $A$}: If $A$ itself is reduced at some step $k$ with $i < k \le j$, then an instance of $A$ has been reduced, satisfying the proposition.
 \end{itemize}
 
 Thus, if $A$ has not been reduced by step $j$, the (possibly instantiated) goal $A'$ at step $j$ can still reduce with a fresh renaming of $C$.
+\end{proof}
+
+\lemPersistence*
+
+\begin{proof}
+For Reduce: if a Reduce transition is enabled for goal $A$ in configuration $(G, \sigma_r)$, it remains enabled in any configuration $(G, \sigma'_r)$ with $\sigma_r \subseteq \sigma'_r$, since other Reduce transitions bind disjoint writers (by SO) and Communicate transitions only instantiate readers. For Communicate: applying $\{X? := T\} \in \sigma$ to $X? \in G$ remains enabled since Reduce transitions do not remove assignments from $\sigma$ and other Communicate transitions apply different assignments.
+\end{proof}
+
+%------------------------------------------------------------------------------
+\subsection{maGLP Proofs}
+\label{app:maglp-proofs}
+%------------------------------------------------------------------------------
+
+\propMaGLPSafety*
+
+\begin{proof}
+The proofs are identical to those for single-agent GLP, substituting ``agent $p$'s resolvent'' for ``resolvent'' and noting that Reduce transitions operate locally within each agent whilst Communicate and Cold-call transitions preserve the properties through reader assignment transfer.
+\end{proof}
+
+\lemmaGLPPersistence*
+
+\begin{proof}
+Reduce persistence follows from GLP persistence (Lemma~\ref{lem:persistence}). Communicate and Cold-call transactions remain enabled since Reduce transitions do not remove reader assignments or network messages.
+\end{proof}
+
+%------------------------------------------------------------------------------
+\subsection{Grassroots Proofs}
+\label{app:grassroots-proofs}
+%------------------------------------------------------------------------------
+
+\propOblivious*
+
+\begin{proof}
+Let $\calF$ be a protocol over transactions $R$ and local-states function $S$. Let $P \subset P' \subset \Pi$. We must show $T(P){\uparrow}P' \subseteq T(P')$.
+
+By Definition~\ref{definition:tb-protocol}, $T(P) = R(P){\uparrow}P$. A transition $t' \in T(P){\uparrow}P'$ is derived from some $t \in R(P)$ by extending to agents in $P'$ who remain stationary. Since $t \in R(P)$ has participants $Q \subseteq P \subset P'$ and is over $S(Q')$ for some $Q' \subseteq P \subset P'$, we have $t \in R(P')$. Hence $t' \in R(P'){\uparrow}P' = T(P')$.
+\end{proof}
+
+\thmInteractiveGrassroots*
+
+\begin{proof}
+Let $\calF$ be a protocol over a set of transactions $R$, where $R$ is interactive.
+Since $\calF$ is a transactions-based protocol then, according to Proposition~\ref{proposition:oblivious}, $\calF$ is oblivious. And since $\calF$ is over an interactive set of transactions, $\calF$ is interactive.
+Therefore, by Definition~\ref{definition:grassroots}, $\calF$ is grassroots.
+\end{proof}
+
+\thmMaGLPGrassroots*
+
+\begin{proof}
+By Theorem~\ref{theorem:interactive-grassroots}, it suffices to show that maGLP is a transactions-based protocol with interactive transactions.
+
+\emph{maGLP is transactions-based}: By Definition~\ref{definition:maGLP}, maGLP is defined via a set of transactions (Reduce, Communicate, Cold-call) over a local-states function (asynchronous resolvents) with a common initial state. Hence maGLP is a transactions-based protocol (Definition~\ref{definition:tb-protocol}).
+
+\emph{maGLP transactions are interactive}: Let $\emptyset \subset P \subset P' \subseteq \Pi$ and let $c \in C(P')$ be a configuration such that $c/P \in C(P)$. We must show there exists a computation $c \xrightarrow{*} c'$ of maGLP$(P')$ such that $c'/P \notin C(P)$.
+
+Since $c/P \in C(P)$, the local states of agents in $P$ contain no variables shared with agents in $P' \setminus P$---all their reader/writer pairs are ``internal'' to $P$.
+
+Consider any agent $p \in P$ and any agent $q \in P' \setminus P$. Agent $p$ can execute a Reduce transaction that sends a message \verb|msg|$(q,X)$ on its network output stream, where $X$ is a fresh writer. Then the Cold-call transaction from $p$ to $q$ adds $X?$ to agent $q$'s network input stream. Agent $q$ can then execute Reduce transactions that bind $X?$ to some term $T$, creating a reader assignment $X? := T$. Finally, the Communicate transaction from $q$ to $p$ applies this assignment to $p$'s resolvent.
+
+The result is that agent $p$'s local state now contains a term $T$ that originated from agent $q \in P' \setminus P$. This constitutes an ``alien trace''---the configuration $c'/P$ contains references to variables or terms that could not have been produced by agents in $P$ running alone. Hence $c'/P \notin C(P)$.
+
+Since such a computation exists for any valid configuration $c$, the maGLP transactions are interactive (Definition~\ref{definition:interactive-transactions}).
+
+By Theorem~\ref{theorem:interactive-grassroots}, maGLP is grassroots.
+\end{proof}
+
+\propAppGrassroots*
+
+\begin{proof}
+A GLP application using cold calls is a restriction of maGLP to a specific program $M$. The Cold-call transaction remains available, as cold calls are used. The proof of Theorem~\ref{theorem:maGLP-grassroots} relies only on the availability of the Cold-call transaction to establish interactivity. Since cold calls provide this mechanism, the application inherits the interactive property.
+
+The application is transactions-based by construction (being a restriction of maGLP). By Proposition~\ref{proposition:oblivious}, it is oblivious. By the interactivity argument above, it is interactive. Therefore, by Definition~\ref{definition:grassroots}, it is grassroots.
+\end{proof}
+
+\corSocialGraphGrassroots*
+
+\begin{proof}
+The social graph uses cold calls for initial contact between disconnected agents. By Proposition~\ref{prop:app-grassroots}, it is grassroots.
 \end{proof}

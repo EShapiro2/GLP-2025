@@ -51,10 +51,10 @@ A run $\rho: (G_0,\sigma_0) \rightarrow \cdots \rightarrow (G_n, \sigma_n)$ of $
 The following proposition justifies the computation-as-deduction view of LP~\cite{kowalski1974predicate},
 calling a proper LP run a \emph{derivation} and a complete proper run ending in the empty goal a \emph{successful derivation}.
 
-\begin{proposition}[LP Computation is Deduction]
+\begin{restatable}[LP Computation is Deduction]{proposition}{propLPDeduction}
 \label{prop:lp-deduction}
 The outcome $(G_0$ \verb|:-| $G_n)\sigma$ of a proper run of $LP(P)$ is a logical consequence of $P$.
-\end{proposition}
+\end{restatable}
 
 \mypara{Denotational Semantics}
 The $LP(P)$ transition system allows defining several denotational semantic notions for a program $P$: (1) the \emph{clause semantics} is the set of all outcomes of all proper runs with an initial most-general unit goal (arguments are distinct variables), closely related to the fully-abstract compositional semantics of LP~\cite{gaifman1989fully}; (2) the \emph{atom semantics} is the set of all outcomes of all successful derivations with an initial most-general unit goal; (3) the \emph{ground atom semantics} is the standard model-theoretic semantics, the set of ground instances of the atom semantics over the Herbrand universe of $P$~\cite{lloyd1987foundations}.
@@ -158,36 +158,32 @@ Implementation-wise, if a GLP goal $A$ cannot be reduced now, but there is a rea
 
 Despite these differences, GLP adopts the same notions of successful run and outcome of LP (Definition~\ref{def:proper-run}), and has the same notion of logical consequence as LP. Let $/?$ be an operator that replaces every reader by its paired writer.
 
-\begin{proposition}[GLP Computation is Deduction]
+\begin{restatable}[GLP Computation is Deduction]{proposition}{propGLPDeduction}
 \label{prop:glp-deduction}
 Let $(G_0$ \verb|:-| $G_n)\sigma$ be the outcome of a proper GLP run $\rho: (G_0,\sigma_0) \rightarrow \cdots \rightarrow (G_n, \sigma_n)$ of $GLP(P)$. Then $(G_0$ \verb|:-| $G_n)\sigma/?$ is a logical consequence of $P/?$.
-\end{proposition}
+\end{restatable}
 
 We note two additional safety properties of GLP runs.
 
-\begin{proposition}[SO Preservation]
+\begin{restatable}[SO Preservation]{proposition}{propSOPreservation}
 \label{prop:so-preservation}
 If the initial goal $G_0$ satisfies SO, then every goal in the GLP run satisfies SO.
-\end{proposition}
+\end{restatable}
 
-\begin{proposition}[Monotonicity]
+\begin{restatable}[Monotonicity]{proposition}{propMonotonicity}
 \label{prop:glp-monotonicity}
 In any GLP run, if unit goal $A$ can reduce with clause $C$ at step $i$, then either an instance of $A$ has been reduced by step $j > i$, or an instance of $A$ can still reduce with $C$ at step $j$.
-\end{proposition}
+\end{restatable}
 
 \begin{definition}[Persistent Transition System]
 \label{def:persistent};//;/;
 A transition system is \temph{persistent} if every enabled transition remains enabled until taken.
 \end{definition}
 
-\begin{lemma}[GLP Persistence]
+\begin{restatable}[GLP Persistence]{lemma}{lemPersistence}
 \label{lem:persistence}
 GLP is persistent.
-\end{lemma}
-
-\begin{proof}
-For Reduce: if a Reduce transition is enabled for goal $A$ in configuration $(G, \sigma_r)$, it remains enabled in any configuration $(G, \sigma'_r)$ with $\sigma_r \subseteq \sigma'_r$, since other Reduce transitions bind disjoint writers (by SO) and Communicate transitions only instantiate readers. For Communicate: applying $\{X? := T\} \in \sigma$ to $X? \in G$ remains enabled since Reduce transitions do not remove assignments from $\sigma$ and other Communicate transitions apply different assignments.
-\end{proof}
+\end{restatable}
 
 \begin{definition}[Fair Run]
 \label{def:fair-run}
