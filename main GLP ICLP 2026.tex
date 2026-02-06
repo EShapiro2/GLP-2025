@@ -1,15 +1,11 @@
-%\documentclass{new_tlp}
-\documentclass[sigconf, nonacm]{acmart}
+\documentclass{tlp}
 
-\let\Bbbk\relax
-% Essential packages
-\usepackage{graphicx}
-\usepackage{amsmath,amssymb,amsfonts}
+% Packages not already loaded by tlp.cls
+% (tlp.cls loads: graphicx, color, amsmath, hyperref, enumitem, natbib)
+\usepackage{amssymb,amsfonts}
 \usepackage{xspace}
-\usepackage{hyperref}
 \usepackage{cleveref}
-\usepackage{xcolor}
-\usepackage{enumitem}
+\usepackage{xcolor} % extends color already loaded by tlp
 
 % Algorithm packages
 \usepackage{algorithm}
@@ -26,7 +22,10 @@
 \usepackage{fancyvrb}
 %\RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize}
 
-% Theorem-like environments (not provided by new_tlp class)
+% Theorem-like environments (not provided by tlp class)
+% Undefine tlp.cls proof environment before loading amsthm
+\let\proof\relax
+\let\endproof\relax
 \usepackage{amsthm}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
@@ -101,17 +100,22 @@
 
 \newtheorem{observation}{Observation}
 
-\title{GLP: A Grassroots, Multiagent, Concurrent,\\ Logic Programming Language}
+\begin{document}
 
-\author[Ehud Shapiro]{Ehud Shapiro\\
-London School of Economics and Weizmann Institute of Science\\
-(e-mail: ehud.shapiro@weizmann.ac.il)}
+\lefttitle{E. Shapiro}
+\jnlPage{1}{14}
+\jnlDoiYr{2026}
+\doival{10.1017/xxxxx}
 
+\title{GLP: A Grassroots, Multiagent, Concurrent, Logic Programming Language}
 
+\begin{authgrp}
+\author{\sn{Shapiro} \gn{Ehud}}
+\affiliation{London School of Economics and Weizmann Institute of Science\\
+(e-mail: \texttt{ehud.shapiro@weizmann.ac.il})}
+\end{authgrp}
 
-%\begin{keywords}
-%concurrent logic programming, grassroots platforms, multiagent systems, transition systems, implementation hierarchy
-%\end{keywords}
+\maketitle
 
 \begin{abstract}
 A digital platform is \emph{grassroots}~\cite{shapiro2023grassrootsBA} if it can have multiple instances that can (1) operate independently of each other and of any global resource other than the network, and (2) coalesce into ever larger instances, possibly resulting in a single global instance.
@@ -125,10 +129,9 @@ Then, we present multiagent transition systems and their specification via multi
 Lastly, we recall the definition of grassroots platforms~\cite{shapiro2023grassrootsBA} and how to prove that a platform specified via atomic transactions is grassroots~\cite{shapiro2025atomic}, and apply these to prove that maGLP is indeed grassroots.  
 \end{abstract}
 
-
-
-\begin{document}
-\maketitle
+\begin{keywords}
+concurrent logic programming, grassroots platforms, multiagent systems, transition systems
+\end{keywords}
 % Main sections
 \input{sections/introduction}
 \input{sections/concurrent-glp}
@@ -137,15 +140,13 @@ Lastly, we recall the definition of grassroots platforms~\cite{shapiro2023grassr
 \input{sections/related-work}
 \input{sections/conclusion}
 
-\bibliographystyle{acmtrans}
+\bibliographystyle{tlplike}
 \bibliography{bib}
 
 \appendix
 
 \input{sections/appendix-proofs}
 \input{sections/appendix-guards}
-\clearpage
-\onecolumn
 \input{sections/appendix-additional-techniques}
 \input{sections/appendix-social-graph-complete}
 
