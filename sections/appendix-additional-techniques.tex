@@ -18,9 +18,10 @@ The \verb|send| predicate adds a message to the output stream, \verb|receive| re
 
 \Program{Stream-Channel Relay}\label{program:relay}
 \begin{verbatim}
-relay(In,Out?,Ch) :- 
+procedure relay(Stream?, Stream, Channel?).
+relay(In,Out?,Ch) :-
     In?=[X|In1], send(X?,Ch?,Ch1) | relay(In1?,Out,Ch1?).
-relay(In,Out?,Ch) :- 
+relay(In,Out?,Ch) :-
     receive(X,Ch?,Ch1), Out=[X?|Out1?] | relay(In?,Out1,Ch1?).
 \end{verbatim}
 
@@ -32,6 +33,7 @@ When multiple input streams merge into a single stream, the source identity of e
 
 \Program{Stream Tagging}\label{program:tag-stream}
 \begin{verbatim}
+procedure tag_stream(_?, Stream?, Stream).
 tag_stream(Name, [M|In], [msg(Name?, M?)|Out]) :-
     tag_stream(Name?, In?, Out?).
 tag_stream(_, [], []).
@@ -45,6 +47,7 @@ For non-ground data requiring observation without consumption, the observer tech
 
 \Program{Concurrent Observer}\label{program:observer}
 \begin{verbatim}
+procedure observe(_?, _, _).
 observe(X?, Y, Z) :- observe(Y?, X, Z).
 observe(X, X?, X?) :- ground(X) | true.
 observe(Xs, [Y1?|Ys1?], [Y2?|Ys2?]) :-
@@ -59,10 +62,12 @@ While the single-writer constraint prevents competitive concurrent updates, GLP 
 
 \Program{Cooperative Producers}\label{program:cooperative}
 \begin{verbatim}
+procedure producer_a(_?).
 producer_a(control(Xs,Next)) :-
     produce_batch_a(Xs,Xs1,Done),
     handover(Done?,Xs1,Next).
 
+procedure producer_b(_?).
 producer_b(control(Xs,Next)) :-
     produce_batch_b(Xs,Xs1,Done),
     handover(Done?,Xs1,Next).
@@ -84,6 +89,8 @@ For three agents \verb|p, q ,r| and three channels  with them \verb|Chp, Chq, Ch
 
 \Program{3-Way Network Switch}\label{program:3-way-network-switch}
 \begin{verbatim}
+procedure network(_?, _?, _?).
+
 % P to Q forwarding
 network((P,ChP),(Q,ChQ),(R,ChR)) :-
     ground(Q), receive(ChP?,msg(Q,X),ChP1), send(ChQ?,X?,ChQ1) |
@@ -143,6 +150,7 @@ A blocklace represents a partially-ordered generalization of the blockchain wher
 %   q(streams(Q_stream, [P_stream?, R_stream?])),
 %   r(streams(R_stream, [P_stream?, Q_stream?]))
 
+procedure streams(Stream, _?).
 streams(MyStream, Others) :-
     produce_payloads(Payloads),
     interlace(Payloads?, MyStream, [], Others?).
@@ -179,9 +187,10 @@ It follows the standard granularity of logic programming metainterpreters, using
 \Program{\GLP plain metainterpreter}\label{program:meta}
 \begin{small}
 \begin{verbatim}
-run(true).  % halt 
-run((A,B)) :- run(A?), run(B?). % fork 
-run(A) :- known(A) | reduce(A?,B), run(B?) %  reduce 
+procedure run(_?).
+run(true).  % halt
+run((A,B)) :- run(A?), run(B?). % fork
+run(A) :- known(A) | reduce(A?,B), run(B?) %  reduce
 
 reduce(merge([X|Xs],Ys,[X?|Zs?]),merge(Xs?,Ys?,Zs)). 
 reduce(merge(Xs,[Y|Ys],[Y?|Zs?]),merge(Xs?,Ys?,Zs)).
@@ -216,10 +225,11 @@ Returning the failed goal \verb|A| as the term \verb|failed(A)| for further proc
 \Program{\GLP fail-safe metainterpreter}\label{program:meta-failsafe}
 \begin{small}
 \begin{verbatim}
-run(true,[]).  % halt 
+procedure run(_?, Stream).
+run(true,[]).  % halt
 run((A,B),Zs?) :- run(A?,Xs), run(B?,Ys), merge(Xs?,Ys?,Zs). % fork
-run(fail(A),[fail(A?)]).    % report failure 
-run(A,Xs?) :- known(A) | reduce(A?,B), run(B?,Xs) %  reduce 
+run(fail(A),[fail(A?)]).    % report failure
+run(A,Xs?) :- known(A) | reduce(A?,B), run(B?,Xs) %  reduce
 \end{verbatim}
 \end{small}
 
@@ -233,13 +243,15 @@ As control messages are intended to be ground, the control stream of a run can b
 \Program{\GLP metainterpreter with run control}\label{program:meta-control}
 \begin{small}
 \begin{verbatim}
-run(true,_).  % halt 
+procedure run(_?, Stream?).
+run(true,_).  % halt
 run((A,B),Cs) :- distribute(Cs?,Cs1,Cs2), run(A?,Cs1?), run(B?,Cs1). % fork
 run(A,[suspend|Cs]) :- suspended_run(A,Cs?).   % suspend
 run(A,Cs) :- known(A) |        % reduce
-        distribute(Cs?,Cs1,Cs2), reduce(A?,B,Cs1?), run(B?,Xs,Cs2?). 
+        distribute(Cs?,Cs1,Cs2), reduce(A?,B,Cs1?), run(B?,Xs,Cs2?).
 
-suspended_run(A,[resume|Cs]) :- run(A,Cs?).  
+procedure suspended_run(_?, Stream?).
+suspended_run(A,[resume|Cs]) :- run(A,Cs?).
 suspended_run(A,[abort|Cs]).
 \end{verbatim}
 \end{small}
@@ -250,13 +262,14 @@ But we wish to introduce additional capabilities before integrating them all.
 
 \mypara{Termination detection} The following metainterpreter allows the detection of the termination of a concurrent GLP program.  It uses the `short-circuit' technique, in which a chain of paired variables extends while goals fork, contracts when goals terminate, and closes when all goals have terminated.
 
-\Program{\GLP termination-detecting metainterpreter}\label{program:meta-control}
+\Program{\GLP termination-detecting metainterpreter}\label{program:meta-termination}
 \begin{small}
 \begin{verbatim}
-run(true,L,L?).  % halt 
+procedure run(_?, _?, _).
+run(true,L,L?).  % halt
 run((A,B),Cs,L,R?) :-  run(A?,Cs1?,L?,M), run(B?,Cs1,M?,R). % fork
 run(A,L,R?) :- known(A) |        % reduce
-        reduce(A?,B,Cs1?), run(B?,Xs,Cs2?,L?,R). 
+        reduce(A?,B,Cs1?), run(B?,Xs,Cs2?,L?,R).
 \end{verbatim}
 \end{small}
 
@@ -271,6 +284,7 @@ We only show the \verb|suspended_run| procedure:
 \Program{\GLP metainterpreter with run control and snapshot collection}\label{program:meta-control-abort-snapshot}
 \begin{small}
 \begin{verbatim}
+procedure suspended_run(_?, Stream?, _, _).
 suspended_run(A,[resume|Cs],L,R?) :- run(A,Cs?,L?,R).
 suspended_run(A,[abort|_],L,[A?|L?]).
 \end{verbatim}
@@ -288,9 +302,10 @@ It assumes that each program clause \verb= A:- D | B= is represented by a unit c
 \Program{\GLP a tracing metainterpreter}\label{program:metatree}
 \begin{small}
 \begin{verbatim}
-run(true,true).  % halt 
-run((A,B),(TA?,TB?)) :- run(A?,TA), run(B?,TB). % fork 
-run(A,((I?:Time?):-TB?)) :- known(A) | 
+procedure run(_?, _).
+run(true,true).  % halt
+run((A,B),(TA?,TB?)) :- run(A?,TA), run(B?,TB). % fork
+run(A,((I?:Time?):-TB?)) :- known(A) |
     time(Time), reduce(A?,B,I), run(B?, TB).
 \end{verbatim}
 \end{small}
@@ -301,12 +316,14 @@ As another example, here is a \GLP metainterpreter, inspired by~\cite{shapiro198
 \Program{\GLP metainterpreter with runtime control}\label{program:runtime}
 \begin{small}
 \begin{verbatim}
+procedure run(_?, Stream?, _?, _).
 run(true,Cs,L?,L).  % halt and close the dump
-run((A,B),Cs,L?,R) :- run(A?,Cs?,L,M?), run(B?,Cs?,M,R?). % fork 
-run(A,Cs,L?,R) :- otherwise, unknown(Cs) | reduce(A?,B), run(B?,Cs,L,R?) %  reduce 
-run(A,[abort|Cs],[A?|R?],R). % abort and dump 
+run((A,B),Cs,L?,R) :- run(A?,Cs?,L,M?), run(B?,Cs?,M,R?). % fork
+run(A,Cs,L?,R) :- otherwise, unknown(Cs) | reduce(A?,B), run(B?,Cs,L,R?) %  reduce
+run(A,[abort|Cs],[A?|R?],R). % abort and dump
 run(A,[suspend|Cs],L?,R) :- suspended_run(A?,Cs?,L,R?). % suspend
 
+procedure suspended_run(_?, Stream?, _?, _).
 suspended_run(A,[resume|Cs],L?,R) :-  run(A?,Cs?,L,R?).  % resume
 suspended_run(A,[C|Cs],L?,R) :- otherwise | run(A?,[C?|Cs?],L,R?).
 \end{verbatim}
