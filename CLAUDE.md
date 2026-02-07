@@ -68,6 +68,11 @@
 
 ## Core Rules
 
+### CRITICAL: Always Commit and Push When Done
+- At the end of every completed task, **always commit and push** without being asked
+- Never leave changes uncommitted or only committed locally
+- This ensures Overleaf stays in sync via GitHub
+
 ### CRITICAL: Do Not Edit Bibliography
 - **NEVER edit bib.bib** - The bibliography file is imported from another project and managed by the user only
 - If citations are missing, tell the user what entries need to be added
