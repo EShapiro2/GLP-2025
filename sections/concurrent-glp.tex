@@ -66,7 +66,7 @@ As we shall see (Proposition~\ref{prop:so-preservation}), the SO invariant is ma
 \label{sec:glp-operational}
 %------------------------------------------------------------------------------
 
-\begin{definition}[Writers Substitution, Assignment, Readers Substitution and Counterpart]
+\begin{definition}[Substitutions and Assignments]
 \label{def:writers-assignment}
 A GLP \temph{writer assignment} is a term of the form $X := T$, $X\in\calV$, $T\notin\calV$, satisfying SO. Similarly, a GLP \temph{reader assignment} is a term of the form $X? := T$, $X?\in\calV?$, $T\notin\calV$, satisfying SO. A \temph{writers (readers) substitution} $\sigma$ is the substitution implied by a set of writer (reader) assignments that jointly satisfy SO. Given a writers assignment $X := T$, its \temph{readers counterpart} is $X? := T$, and given a writers substitution $\sigma$, its \temph{readers counterpart} $\sigma?$ is the readers substitution defined by $X?\sigma? = X\sigma$.
 \end{definition}
@@ -136,7 +136,7 @@ In any GLP run, if unit goal $A$ can reduce with clause $C$ at step $i$, then ei
 A transition system is \temph{persistent} if every enabled transition remains enabled until taken.
 \end{definition}
 
-\begin{restatable}[GLP Persistence]{lemma}{lemPersistence}
+\begin{restatable}{lemma}{lemPersistence}
 \label{lem:persistence}
 GLP is persistent.
 \end{restatable}

@@ -8,23 +8,23 @@ Informally, a protocol defined via atomic transactions is \emph{grassroots} if i
 
 The Cold-call transaction (Definition~\ref{definition:maGLP}) is the fundamental interactive transaction of maGLP. It allows an agent $q$ outside a group $P$ to connect to an agent $p \in P$, establishing a pair of shared variables: a writer held by one agent and its paired reader held by the other. The resulting shared variable constitutes an alien trace in $p$'s state---a reference that could not have arisen from $P$ running alone.
 
-\begin{restatable}[maGLP is Grassroots]{theorem}{thmMaGLPGrassroots}
+\begin{restatable}{theorem}{thmMaGLPGrassroots}
 \label{theorem:maGLP-grassroots}
 The maGLP protocol is grassroots.
 \end{restatable}
 
 The grassroots property of maGLP extends to applications built on top of it, provided they use the cold-call mechanism.
 
-\begin{definition}[GLP Application, Cold Call]
+\begin{definition}[GLP Application]
 A \temph{GLP application} is a GLP program $M$ together with the maGLP infrastructure. An application \temph{uses cold calls} if agents can execute the Cold-call transaction to establish communication with previously-disconnected agents.
 \end{definition}
 
-\begin{restatable}[GLP Applications Using Cold Calls are Grassroots]{proposition}{propAppGrassroots}
+\begin{restatable}{proposition}{propAppGrassroots}
 \label{prop:app-grassroots}
 Any GLP application that uses cold calls is grassroots.
 \end{restatable}
 
-\begin{restatable}[The Grassroots Social Graph is Grassroots]{corollary}{corSocialGraphGrassroots}
+\begin{restatable}{corollary}{corSocialGraphGrassroots}
 \label{corollary:social-graph-grassroots}
 The GLP implementation of the grassroots social graph (Section~\ref{sec:social-graph}) is grassroots.
 \end{restatable}
