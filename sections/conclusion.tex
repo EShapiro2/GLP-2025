@@ -3,7 +3,7 @@
 We have presented GLP, a multiagent, concurrent logic programming language designed for implementing grassroots platforms. The key contributions are:
 
 \begin{enumerate}
-\item \textbf{GLP Definition:} We defined GLP as an extension of logic programs with reader/writer variable pairs satisfying the Single-Reader/Single-Writer (SRSW) restriction, providing asynchronous communication through term matching rather than unification.
+\item \textbf{GLP Definition:} We defined GLP as an extension of logic programs with reader/writer variable pairs satisfying the Single-Occurrence (SO) invariant and the Single-Reader/Single-Writer (SRSW) restriction, providing asynchronous communication through term matching rather than unification.
 
 \item \textbf{Multiagent GLP:} We extended GLP to multiple agents using multiagent transition systems with atomic transactions, defining maGLP with Reduce, Communicate, and Cold-call transactions.
 
