@@ -2,13 +2,12 @@
 \section{Multiagent GLP}\label{sec:maglp}
 %==============================================================================
 
-This section extends GLP to multiple agents. We first define multiagent transition systems via multiagent atomic transactions, then define multiagent GLP (maGLP) as a transactions-based multiagent transition system, and finally show how the social graph operates in the multiagent setting.
+This section extends GLP to multiple agents. We first recall the notion of multiagent transition systems via multiagent atomic transactions~\citep{shapiro2021multiagent,shapiro2025atomic}, then define multiagent GLP (maGLP) as a transactions-based multiagent transition system, and finally show how the social graph operates in the multiagent setting.
 
 %------------------------------------------------------------------------------
 \subsection{Multiagent Transition Systems}
 \label{sec:mts}
 %------------------------------------------------------------------------------
-
 We assume a potentially infinite set of \emph{agents} $\Pi$, but consider only finite subsets of it, so when we refer to a particular set of agents $P \subset \Pi$ we assume $P$ to be nonempty and finite. We use $\subset$ to denote the strict subset relation and $\subseteq$ when equality is also possible.
 
 We use $S^P$ to denote the set $S$ indexed by the set $P$, and if $c\in S^P$ we use $c_p$ to denote the member of $c$ indexed by $p\in P$. Intuitively, think of such a $c\in S^P$ as an array of cells indexed by members of $P$ with cell values in $S$.
@@ -78,7 +77,7 @@ Given agents $P\subset \Pi$ and GLP program $M$, the \temph{maGLP transition sys
 \end{definition}
 
 Note that Communicate maybe unary or binary, depending on whether $p=q$.  Both Communicate and Cold-call transfer assignments from writers to readers: Communicate operates between agents sharing a paired reader and writer, while Cold-call operates through the network streams established in each agent's initial configuration, enabling the creation of paired variables among previously-disconnected agents.
-Naturally, Cold-call would be the exception, as once agents share a paired variable they can use to to communicate indefinitely; moreover, an agent with two friends (with which it shares channels) may introduce them to each other, also saving the need for a Cold-call.
+Naturally, Cold-call would be the exception, as once agents share a paired variable they can use to to communicate indefinitely; moreover, an agent with two friends (with which it shares channels) may introduce them to each other, also eschewing the need for a Cold-call.
 %------------------------------------------------------------------------------
 \subsection{The Multiagent Social Graph}
 \label{sec:ma-social-graph}

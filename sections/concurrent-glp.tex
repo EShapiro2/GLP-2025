@@ -73,13 +73,14 @@ A GLP \temph{writer assignment} is a term of the form $X := T$, $X\in\calV$, $T\
 
 \begin{definition}[GLP Renaming, Renaming Apart]
 \label{def:glp-renaming}
-A \temph{GLP renaming} is a substitution $\rho: \hat\calV \to \hat\calV$ such that for each $X \in \calV$: $X\rho \in \calV$ and $X?\rho = (X\rho)?$. Two GLP terms \temph{have a variable in common} if for some writer $X \in \calV$, either $X$ or $X?$ occurs in both. A GLP renaming $\sigma$ \temph{renames $T'$ apart from} $T$ if $T'\sigma$ and $T$ have no variable in common.
+A \temph{GLP renaming} is a substitution $\rho: \hat\calV \to \hat\calV$ such that for each $X \in \calV$: $X\rho \in \calV$ and $X?\rho = (X\rho)?$. Two GLP terms $T_1, T_2$ \temph{have a variable in common} if for some writer $X \in \calV$,  $T_1$ has on occurrence of $X$ or $X?$ and so does $T_2$. A GLP renaming $\sigma$ \temph{renames $T'$ apart from} $T$ if $T'\sigma$ and $T$ have no variable in common.
 \end{definition}
 
 \begin{definition}[Writer MGU]
 \label{def:writer-mgu}
-Given two GLP unit goals $A$ and $H$, a \temph{writer mgu} is a writers substitution $\sigma$ such that $A\sigma = H\sigma$ and $\sigma$ is most general among such substitutions. Unlike standard unification, writer mgu only assigns writers, not readers.
+Given two GLP unit goals $A$ and $H$, a \temph{writer mgu} is a writers substitution $\sigma$ such that $A\sigma = H\sigma$ and $\sigma$ is most general among such substitutions. 
 \end{definition}
+Note that a writer mgu cannot assign readers.
 
 \begin{definition}[GLP Goal/Clause Reduction]
 \label{def:glp-reduction}
@@ -167,7 +168,7 @@ Definition~\ref{def:glp-reduction} of a GLP goal/clause reduction is augmented t
 \begin{remark}[Guards and SRSW]
 \label{rem:guards-srsw}
 Guard occurrences count toward SRSW satisfaction: if $X?$ occurs in a guard, its paired writer $X$ must occur in the head and $X?$ may additionally occur once in the body.
-
+%
 Furthermore, if the success of a guard implies that $X?$ is ground, then $X?$ as well as $X$ may occur multiple times in the clause. Groundness-implying guards include \verb|ground|, \verb|integer|, \verb|number|, \verb|string|, \verb|constant|, arithmetic comparisons (\verb|<|, \verb|>|, \verb|=<|, \verb|>=|, \verb|=:=|, \verb|=\=|), and ground equality (\verb|=?=|). However,  \verb|known| and \verb|compound| do not imply groundness.
 \end{remark}
 
@@ -189,8 +190,7 @@ Additional programming examples---including stream distribution, association lis
 \subsection{The Grassroots Social Graph}
 \label{sec:social-graph}
 %------------------------------------------------------------------------------
-
-The grassroots social graph is the foundational platform upon which all other grassroots platforms are built. Nodes represent cryptographically-identified agents; edges represent authenticated bidirectional channels; connected components arise spontaneously through befriending. We present the social graph as a single-agent GLP program, using a \emph{network switch} to simulate communication between agents, before introducing multiagent GLP in Section~\ref{sec:maglp}.
+In our design,  the grassroots social graph is the infrastructure platform upon which all other grassroots platforms are built. Nodes represent cryptographically self-identified agents; edges represent authenticated bidirectional channels; connected components arise spontaneously through befriending. We present the social graph as a single-agent GLP program, using a \emph{network switch} to simulate communication between agents, before introducing multiagent GLP in Section~\ref{sec:maglp}.
 
 Each agent processes messages from user and network input streams and maintains an outputs list mapping named destinations to output streams. The program supports three protocols: (1) \emph{cold-call befriending}, where agents with no prior shared variables establish friendship by exchanging a response variable through the network; (2) \emph{text messaging} between established friends via named output streams; and (3) \emph{friend-mediated introduction}, where a mutual friend creates a channel pair and sends each half to the respective parties, establishing a direct connection.
 
