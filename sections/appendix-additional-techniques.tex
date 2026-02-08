@@ -18,6 +18,7 @@ Since \verb|X?| is ground, its multiple occurrences in the head do not violate S
 
 \begin{example}[Lookup in Association List]
 \label{ex:lookup}
+
 \begin{verbatim}
 procedure lookup(_?, _?, _).
 lookup(Key, [(K, Value)|_], Value?) :- Key? =?= K? | true.
@@ -201,7 +202,7 @@ The interlaced streams technique demonstrates how GLP's reader/writer synchroniz
 \subsection{Metainterpreters}
 
 Program development is essentially a single-agent endeavour:  The programmer trying to write and debug a GLP program.  As in Concurrent Prolog, a key strength of GLP is metainterpretation:  The ability to write GLP interpreters with various functions in GLP.  This allows writing a GLP program development environment and a GLP operating system within GLP itself~\citep{sterling1994art,safra1988meta,shapiro1982algorithmic,lichtenstein1988concurrent,silverman1988logix}, as well as writing a GLP operating system in GLP~\citep{shapiro1984systems}. These two scenarios are the focus of this section:
-a programmer developing a program and running it with enhanced metainterpreters that support the various needs of program development, and an operating system written in GLP that supports the execution, monitoring and and control of GLP programs.
+a programmer developing a program and running it with enhanced metainterpreters that support the various needs of program development, and an operating system written in GLP that supports the execution, monitoring and control of GLP programs.
 
 \mypara{Plain metainterpreter}
 Next we show a plain \GLP metainterpreter.
@@ -313,7 +314,7 @@ suspended_run(A,[abort|_],L,[A?|L?]).
 \end{verbatim}
 \end{small}
 
-When called with \verb|run(A,Cs?,[],R)|, if \verb|Cs| is assigned \verb|[suspend,abort]|, the reader \verb|R?| will be assigned the current resolvent of the run (which could be empty if the run has already terminated before
+When called with \verb|run(A,Cs?,[],R)|, if \verb|Cs| is assigned \verb|[suspend,abort]|, the reader \verb|R?| will be assigned the current resolvent of the run (which could be empty if the run has already terminated before).
 
 Note that taking a snapshot of a suspended run and then resuming it requires extra effort, as two copies of the goal are needed,  a `frozen' one for the snapshot, and a `live' one to continue the run.  Addressing this is necessary for interactive debugging, to allow a developer to watch a program under development as it runs.  We discuss it below.
 
