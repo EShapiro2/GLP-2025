@@ -78,7 +78,7 @@ Given agents $P\subset \Pi$ and GLP program $M$, the \temph{maGLP transition sys
 \end{definition}
 
 Note that Communicate maybe unary or binary, depending on whether $p=q$.  Both Communicate and Cold-call transfer assignments from writers to readers: Communicate operates between agents sharing a paired reader and writer, while Cold-call operates through the network streams established in each agent's initial configuration, enabling the creation of paired variables among previously-disconnected agents.
-Naturally, Cold-call would be the exception, as once agents share a paired variable they do not need to communicate; moreover, an agent with two friends (with which it shares channels) may introduce them to each other, also saving the need for a Cold-call.
+Naturally, Cold-call would be the exception, as once agents share a paired variable they can use to to communicate indefinitely; moreover, an agent with two friends (with which it shares channels) may introduce them to each other, also saving the need for a Cold-call.
 %------------------------------------------------------------------------------
 \subsection{The Multiagent Social Graph}
 \label{sec:ma-social-graph}
