@@ -208,7 +208,7 @@ a programmer developing a program and running it with enhanced metainterpreters 
 Next we show a plain \GLP metainterpreter.
 It follows the standard granularity of logic programming metainterpreters, using the predicate \verb|reduce| to encode each program clause. This approach avoids the need for explicit renaming and, in the case of concurrent logic programs such as GLP also guard evaluation, while maintaining explicit goal reduction and body evaluation. The encoding is such that if in a call to \verb|reduce| a given goal unifies with its first argument then the body is returned in its second argument. Here we show it together with a \verb|reduce| encoding of \verb|merge|.
 
-\Program{\GLP plain metainterpreter}\label{program:meta}
+\Program{GLP plain metainterpreter}\label{program:meta}
 \begin{small}
 \begin{verbatim}
 procedure run(_?).
@@ -246,7 +246,7 @@ reduce(A,failed(A)) :- otherwise | true.
 \end{verbatim}
 Returning the failed goal \verb|A| as the term \verb|failed(A)| for further processing, the simplest being just reporting the failure, as in the following metainterpreter:
 
-\Program{\GLP fail-safe metainterpreter}\label{program:meta-failsafe}
+\Program{GLP fail-safe metainterpreter}\label{program:meta-failsafe}
 \begin{small}
 \begin{verbatim}
 procedure run(_?, Stream).
@@ -264,7 +264,7 @@ Failure reports can be used to debug a program, but do not prevent a faulty run 
 Here we augment the metainterpreter with run control, via which a run can be suspended, resumed, and aborted. 
 As control messages are intended to be ground, the control stream of a run can be distributed to all metainterpreter instances that participate in its execution.
 
-\Program{\GLP metainterpreter with run control}\label{program:meta-control}
+\Program{GLP metainterpreter with run control}\label{program:meta-control}
 \begin{small}
 \begin{verbatim}
 procedure run(_?, Stream?).
@@ -286,7 +286,7 @@ But we wish to introduce additional capabilities before integrating them all.
 
 \mypara{Termination detection} The following metainterpreter allows the detection of the termination of a concurrent GLP program.  It uses the `short-circuit' technique, in which a chain of paired variables extends while goals fork, contracts when goals terminate, and closes when all goals have terminated.
 
-\Program{\GLP termination-detecting metainterpreter}\label{program:meta-termination}
+\Program{GLP termination-detecting metainterpreter}\label{program:meta-termination}
 \begin{small}
 \begin{verbatim}
 procedure run(_?, _?, _).
@@ -305,7 +305,7 @@ The short-circuit technique can be used to extend the metainterpreter with run c
 the resolvent is passed from left to right in the short circuit, with each metainterpreter instance adding their interpreted goal to the growing resolvent.
 We only show the \verb|suspended_run| procedure:
 
-\Program{\GLP metainterpreter with run control and snapshot collection}\label{program:meta-control-abort-snapshot}
+\Program{GLP metainterpreter with run control and snapshot collection}\label{program:meta-control-abort-snapshot}
 \begin{small}
 \begin{verbatim}
 procedure suspended_run(_?, Stream?, _, _).
@@ -323,7 +323,7 @@ Note that taking a snapshot of a suspended run and then resuming it requires ext
 It assumes that each program clause \verb= A:- D | B= is represented by a unit clause
 \verb=reduce(A,B,I) :- G | true=, with $I$ being the serial number of the clause in the program.
 
-\Program{\GLP a tracing metainterpreter}\label{program:metatree}
+\Program{GLP a tracing metainterpreter}\label{program:metatree}
 \begin{small}
 \begin{verbatim}
 procedure run(_?, _).
@@ -337,7 +337,7 @@ run(A,((I?:Time?):-TB?)) :- known(A) |
 
 As another example, here is a \GLP metainterpreter, inspired by~\citep{shapiro1984systems}, that can suspend, resume, and abort a \GLP run and produce a dump of the processes of the aborted run. It employs the guard predicate \verb|otherwise|, which succeeds if and only if all previous clauses in the procedure fail (as opposed to suspend). This enables default case handling when no other clause applies.
 
-\Program{\GLP metainterpreter with runtime control}\label{program:runtime}
+\Program{GLP metainterpreter with runtime control}\label{program:runtime}
 \begin{small}
 \begin{verbatim}
 procedure run(_?, Stream?, _?, _).
