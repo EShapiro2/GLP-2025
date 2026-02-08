@@ -3,7 +3,7 @@
 Guards and system predicates extend GLP programs with access to the GLP runtime state, operating system and hardware capabilities.
 
 \mypara{Guard predicates}
-Guards provide read-only access to the runtime state of GLP computation. A guard appears after the clause head, separated by \verb=|=, and must be satisfied for the clause to be selected. The ``Ground'' column indicates whether success of the guard implies that the argument is ground; such guards permit multiple occurrences of the reader in the clause body (Remark~\ref{rem:guards-srsw}).
+Guards provide read-only access to the runtime state of GLP computation. A guard appears after the clause head, separated by \verb=|=, and must be satisfied for the clause to be selected. The ``Ground'' column indicates whether success of the guard implies that the argument is ground; such guards permit multiple occurrences of the reader in the clause body (Remark~\ref{rem:guards-srsw}). Built-in guards can be negated: \verb|~G| succeeds if \verb|G| fails and vice versa, while suspension is unchanged; negation applies only to atomic built-in guards, not to defined guards or conjunctions.
 
 \begin{center}
 \begin{tabular}{lll}
@@ -12,21 +12,19 @@ Guards provide read-only access to the runtime state of GLP computation. A guard
 \verb|integer| & \verb|procedure integer(Integer?).| & yes \\
 \verb|number| & \verb|procedure number(Number?).| & yes \\
 \verb|string| & \verb|procedure string(String?).| & yes \\
-\verb|atom| & \verb|procedure atom(String?).| & yes \\
 \verb|constant| & \verb|procedure constant(Constant?).| & yes \\
 \verb|compound| & \verb|procedure compound(_?).| & no \\
-\verb|is_list| & \verb|procedure is_list(Stream?).| & no \\
+\verb|list| & \verb|procedure list(_?).| & no \\
 \verb|ground| & \verb|procedure ground(_?).| & yes \\
 \verb|known| & \verb|procedure known(_?).| & no \\
 \verb|unknown| & \verb|procedure unknown(_?).| & no \\
-\verb|writer| & \verb|procedure writer(_?).| & no \\
-\verb|reader| & \verb|procedure reader(_?).| & no$^*$ \\
 \verb|no_readers| & \verb|procedure no_readers(_?).| & no \\
+\verb|equator| & \verb|procedure equator(_?).| & no \\
+\verb|is_mutual_ref| & \verb|procedure is_mutual_ref(_?).| & no \\
 \verb|otherwise| & (no arguments) & --- \\
 \verb|=?=| & \verb|procedure =?=(_?, _?).| & yes (both) \\
 \end{tabular}
 \end{center}
-\noindent$^*$\verb|reader(X)| is non-monotonic: it succeeds if \verb|X| is an unassigned reader, but once \verb|X| is assigned it fails.
 
 \verb|otherwise| succeeds if all previous clauses for this procedure failed (or suspended).
 
@@ -48,6 +46,19 @@ Arithmetic comparison guards evaluate their arguments as arithmetic expressions 
 \end{tabular}
 \end{center}
 
+\mypara{Time guards}
+Time guards provide access to the system clock for scheduling and synchronization:
+
+\begin{center}
+\begin{tabular}{ll}
+\textbf{Guard} & \textbf{Signature} \\
+\hline
+\verb|wait| & \verb|procedure wait(Number?).| \\
+\verb|wait_until| & \verb|procedure wait_until(Number?).| \\
+\end{tabular}
+\end{center}
+\noindent\verb|wait(D)| suspends for \verb|D| milliseconds then succeeds. \verb|wait_until(T)| succeeds if the current time is at or past timestamp~\verb|T| (Unix milliseconds), and fails otherwise. Neither guard can be negated.
+
 \mypara{Monotonicity and implications}
 \verb|ground/1|, \verb|no_readers/1|, and \verb|known/1| are monotonic. \verb|ground(X)| implies both \verb|no_readers(X)| and \verb|known(X)|, which do not imply each other: \verb|no_readers(X)| succeeds but \verb|known(X)| fails for an unassigned writer; \verb|no_readers(f(X?))| suspends but \verb|known(f(X?))| succeeds.
 
@@ -66,18 +77,16 @@ System predicates execute atomically with goal/clause reduction and provide acce
 \verb|=(_, _?).| & Unification \\
 \verb|=..(_, Stream?).| & Term composition: constructs term from list \\
 \verb|..=(Stream, _?).| & Term decomposition: decomposes term into list \\
-\verb|evaluate(Exp?,Result).| & Evaluates ground arithmetic expressions \\
-\verb|current_time(T).| & Provides system timestamps \\
-\verb|variable_name(X,Name).| & Returns a unique identifier for variable \verb|X| and its pair \\
+\verb|now(Integer).| & Binds argument to current Unix timestamp (milliseconds) \\
 \end{tabular}
 \end{center}
 
 \noindent The \verb|=| predicate performs unification: \verb|X? = X| succeeds, assigning both sides. The \verb|=..| predicate composes a term from a list: \verb|Term =.. [Functor, Arg1, ..., ArgN]?| constructs \verb|Term| as \verb|Functor(Arg1, ..., ArgN)|. The \verb|..=| predicate decomposes a term into a list: \verb|List ..= Term?| produces \verb|[Functor, Arg1, ..., ArgN]| from \verb|Term|. Both follow the convention of input on the right (reader) and output on the left (writer).
 
 \mypara{Arithmetic evaluation in assignments}
-Arithmetic expressions are defined by the following clause:
+Arithmetic assignment is defined by the following clause:
 \begin{verbatim}
-X? := E :- ground(E) | evaluate(E?,X).
+X? := E :- ground(E?) | true.
 \end{verbatim}
-Ensuring the expression is ground before calling the system evaluator, maintaining program safety whilst providing convenient notation for mathematical computations.
+The guard \verb|ground(E?)| ensures the expression is fully evaluated before the assignment is made. The runtime evaluates the arithmetic expression and binds the result to \verb|X|.
 
