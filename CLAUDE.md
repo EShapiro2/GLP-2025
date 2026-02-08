@@ -31,39 +31,30 @@
 /Users/udi/Grassroots/GLP-ICLP-2026/
 ├── CLAUDE.md                           # ← This file
 ├── main GLP ICLP 2026.tex              # ← Main document
-├── bib.bib                             # ← Bibliography
+├── main GLP ICLP 2026.bbl              # ← Inlined bibliography (no bib.bib)
 │
 ├── STYLE FILES:
-│   ├── new_tlp.cls                     # ← TPLP document class
-│   ├── acmtrans.bst                    # ← Bibliography style
-│   └── aopmath.sty                     # ← Math package
+│   ├── tlp.cls                         # ← TPLP document class
+│   ├── tlplike.bst                     # ← TLP bibliography style
+│   └── acmtrans.bst                    # ← ACM bibliography style
 │
-├── SECTIONS (Main Content):
-│   ├── glp_section_introduction.tex
-│   ├── glp_section_concurrent_glp.tex  # ← Combined TS/LP/GLP section
-│   ├── glp_section_foundations.tex
-│   ├── glp_section_logic_programs.tex
-│   ├── glp_section_glp.tex
-│   ├── glp_section_multiagent.tex
-│   ├── glp_section_examples.tex
-│   ├── glp_section_social_graph.tex
-│   ├── glp_section_implementation.tex
-│   ├── glp_section_related_work.tex
-│   └── glp_section_conclusion.tex
-│
-├── APPENDICES:
-│   ├── glp_appendix_proofs.tex
-│   ├── glp_appendix_social_graph_properties.tex
-│   ├── glp_appendix_social_networking.tex
-│   ├── glp_appendix_guards_system.tex
-│   ├── glp_appendix_additional_techniques.tex
-│   ├── glp_appendix_security.tex
-│   ├── glp_appendix_workstation.tex
-│   └── glp_appendix_smartphone.tex
-│
-├── Code/                               # ← Code snippets for paper
-├── Figs/                               # ← Figures
-└── OLD/, Backup/                       # ← Previous versions
+├── SECTIONS:
+│   ├── introduction.tex
+│   ├── concurrent-glp.tex
+│   ├── maglp.tex
+│   ├── grassroots.tex
+│   ├── related-work.tex
+│   ├── conclusion.tex
+│   ├── appendix-lp.tex
+│   ├── appendix-term-matching.tex
+│   ├── appendix-grassroots-defs.tex
+│   ├── appendix-mts-defs.tex
+│   ├── appendix-proofs.tex
+│   ├── appendix-guards.tex
+│   ├── appendix-additional-techniques.tex
+│   ├── appendix-social-graph-walkthrough.tex
+│   ├── appendix-social-graph-complete.tex
+│   └── appendix-denotational.tex
 ```
 
 ## Core Rules
@@ -73,16 +64,16 @@
 - Never leave changes uncommitted or only committed locally
 - This ensures Overleaf stays in sync via GitHub
 
-### CRITICAL: Do Not Edit Bibliography
-- **NEVER edit bib.bib** - The bibliography file is imported from another project and managed by the user only
-- If citations are missing, tell the user what entries need to be added
+### CRITICAL: Bibliography
+- **bib.bib has been removed** from this repo for arXiv submission (master copy is in Bib-Grassroots/)
+- Bibliography is inlined via `main GLP ICLP 2026.bbl`
+- If citations are missing, add them directly to the .bbl file
 - If there are bib-related errors, report them but do not attempt to fix
 
-### CRITICAL: Filesystem Access
-- **Bash/shell commands DO NOT WORK** on the user's local filesystem
-- Use ONLY the Filesystem tools (read_text_file, edit_file, write_file, search_files, list_directory)
-- NEVER use bash_tool for file operations on /Users/udi/
-- For git operations, provide commands for the USER to run manually
+### Tool Permissions (Claude Code)
+- Claude Code should use commands that do not require constant user approval
+- Prefer Read/Edit/Write/Grep/Glob tools over shell commands where possible
+- For git operations, use Bash directly (git add, commit, push are pre-approved)
 
 ### Do Exactly What Is Asked
 - When the user asks something, do exactly as asked and nothing else

@@ -119,6 +119,12 @@
 \newblock The family of concurrent logic programming languages.
 \newblock {\em ACM Computing Surveys (CSUR)}, {\it 21}, 3, 413--510.
 
+\bibitem[Shapiro, 2021]{shapiro2021multiagent}
+{\sc Shapiro, E.} 2021.
+\newblock Multiagent transition systems: Protocol-stack mathematics for
+  distributed computing.
+\newblock {\em arXiv preprint arXiv:2112.13650},.
+
 \bibitem[Shapiro, 2023a]{shapiro2023grassrootsBA}
 {\sc Shapiro, E.}
 \newblock Grassroots distributed systems: Concept, examples, implementation and
