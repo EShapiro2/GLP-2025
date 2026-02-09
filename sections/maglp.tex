@@ -72,7 +72,7 @@ Given agents $P\subset \Pi$ and GLP program $M$, the \temph{maGLP transition sys
     
     \item \textbf{Communicate $p$ to $q$:} A transaction with participants $p,q\in P$ where $c_p=(G_p,\sigma_p)$, $c_q=(G_q,\sigma_q)$, $\{X?:=T\} \in \sigma_p$, $X?$ occurs in $G_q$, $c'_p=(G_p,\sigma_p \setminus \{X?:=T\})$, and $c'_q=(G_q\{X?:=T\},\sigma_q)$. 
     
-    \item \textbf{Cold-call $p$ to $q$:} A binary transaction with participants $p\ne q \in P$ where the network output stream in $c_p$ has a new message \verb|msg|$(q,X)$, $c'_p$ is the result of advancing the network output stream in $c_p$, and $c'_q$ is the result of adding $X?$ to the network input stream in $c_q$.
+    \item \textbf{Cold-call $p$ to $q$:} A binary transaction with participants $p\ne q \in P$ where the network output stream in $c_p$ has a new message \verb|msg|$(q,X)$, $c'_p$ is the result of advancing the network output stream in $c_p$, and $c'_q$ is the result of adding $X$ to the network input stream in $c_q$.
 \end{enumerate}
 \end{definition}
 
