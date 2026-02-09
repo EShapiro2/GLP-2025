@@ -97,6 +97,7 @@
 - Mistakes: Just acknowledge - no apologies or promises
 - **Never use boxed questions** (AskUserQuestion tool) — only free text discussion
 - **Never leave a discussion unilaterally** — always wait for user to approve that the discussion has ended before moving on
+- NEVER use the word "pattern" in any paper or document (except in the technical context of pattern-matching).  ALWAYS use more precise alternatives.
 
 ## Working Modes
 

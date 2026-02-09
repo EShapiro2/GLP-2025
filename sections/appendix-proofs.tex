@@ -73,7 +73,7 @@ Identical to single-agent GLP (Proposition~\ref{prop:so-preservation}), substitu
 \propMaGLPMonotonicity*
 
 \begin{proof}
-Identical to single-agent GLP (Proposition~\ref{prop:glp-monotonicity}), substituting ``agent $p$'s resolvent'' for ``resolvent'' and noting that Reduce transitions operate locally within each agent whilst Communicate and Cold-call transitions preserve reducibility through reader assignment transfer.
+Identical to single-agent GLP (Proposition~\ref{prop:glp-monotonicity}), substituting ``agent $p$'s resolvent'' for ``resolvent'' and noting that Reduce transitions operate locally within each agent, Communicate transitions preserve reducibility through reader assignment transfer, and Cold-call adds to $q$'s network input stream without affecting the reducibility of existing goals.
 \end{proof}
 
 \lemmaGLPPersistence*
@@ -114,7 +114,7 @@ By Theorem~\ref{theorem:interactive-grassroots}, it suffices to show that maGLP 
 
 Since $c/P \in C(P)$, the local states of agents in $P$ contain no variables shared with agents in $P' \setminus P$---all their reader/writer pairs are ``internal'' to $P$.
 
-Consider any agent $p \in P$ and any agent $q \in P' \setminus P$. Agent $p$ can execute a Reduce transaction that sends a message \verb|msg|$(q,X)$ on its network output stream, where $X$ is a fresh writer. Then the Cold-call transaction from $p$ to $q$ adds $X?$ to agent $q$'s network input stream. Agent $q$ can then execute Reduce transactions that assign $X?$ some term $T$, creating a reader assignment $X? := T$. Finally, the Communicate transaction from $q$ to $p$ applies this assignment to $p$'s resolvent.
+Consider any agent $p \in P$ and any agent $q \in P' \setminus P$. Agent $p$ can execute a Reduce transaction that sends a message \verb|msg|$(q,X)$ on its network output stream, where $X$ is a term containing a fresh writer. Then the Cold-call transaction from $p$ to $q$ adds $X$ to agent $q$'s network input stream, establishing shared variable pairs between $p$ and $q$. Agent $q$ can then execute Reduce transactions that assign writers in $X$, and the Communicate transaction transfers these assignments back to $p$'s resolvent.
 
 The result is that agent $p$'s local state now contains a term $T$ that originated from agent $q \in P' \setminus P$. This constitutes an ``alien trace''---the configuration $c'/P$ contains references to variables or terms that could not have been produced by agents in $P$ running alone. Hence $c'/P \notin C(P)$.
 
